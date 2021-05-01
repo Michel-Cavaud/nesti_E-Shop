@@ -1,0 +1,18 @@
+<div class="w-96 ml-9 my-5">
+    <h2 class="font-croissant text-center text-3xl rounded-md bg-blanc py-5">Recettes disponibles</h2>
+</div>
+
+<div class="marquee">
+    <ul class="marquee-content">
+        {% for recette in recettes %}
+            <li>
+               <a href="{{path('recette',{id : recette.id})}}" class="mx-1">
+                    <img src="{{LIEN_IMAGES_RECETTES}}{{recette.images.nomImages}}.{{recette.images.extensionImages}}">
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+

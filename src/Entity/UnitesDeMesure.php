@@ -2,35 +2,29 @@
 
 namespace App\Entity;
 
+use App\Repository\UnitesDeMesureRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UnitesDeMesure
- *
- * @ORM\Table(name="unites_de_mesure")
- * @ORM\Entity(repositoryClass="App\Repository\UnitesDeMesuresRepository")
+ * @ORM\Entity(repositoryClass=UnitesDeMesureRepository::class)
  */
 class UnitesDeMesure
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id_unites_de_mesure", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="id_unites_de_mesure", type="integer", nullable=false)
      */
-    private $idUnitesDeMesure;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nom_unites_de_mesure", type="string", length=50, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=255)
      */
-    private $nomUnitesDeMesure = 'NULL';
+    private $nomUnitesDeMesure;
 
-    public function getIdUnitesDeMesure(): ?int
+    public function getId(): ?int
     {
-        return $this->idUnitesDeMesure;
+        return $this->id;
     }
 
     public function getNomUnitesDeMesure(): ?string
@@ -38,12 +32,10 @@ class UnitesDeMesure
         return $this->nomUnitesDeMesure;
     }
 
-    public function setNomUnitesDeMesure(?string $nomUnitesDeMesure): self
+    public function setNomUnitesDeMesure(string $nomUnitesDeMesure): self
     {
         $this->nomUnitesDeMesure = $nomUnitesDeMesure;
 
         return $this;
     }
-
-
 }

@@ -2,35 +2,32 @@
 
 namespace App\Entity;
 
+use App\Repository\ProduitsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Produits
- *
- * @ORM\Table(name="produits")
- * @ORM\Entity(repositoryClass="App\Repository\ProduitsRepository")
+ * @ORM\Entity(repositoryClass=ProduitsRepository::class)
  */
 class Produits
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id_produits", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="id_produits", type="integer", nullable=false)
      */
-    private $idProduits;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nom_produits", type="string", length=50, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=255)
      */
-    private $nomProduits = 'NULL';
+    private $nomProduits;
 
-    public function getIdProduits(): ?int
+
+    public function getId(): ?int
     {
-        return $this->idProduits;
+        return $this->id;
     }
 
     public function getNomProduits(): ?string
@@ -38,12 +35,10 @@ class Produits
         return $this->nomProduits;
     }
 
-    public function setNomProduits(?string $nomProduits): self
+    public function setNomProduits(string $nomProduits): self
     {
         $this->nomProduits = $nomProduits;
 
         return $this;
     }
-
-
 }

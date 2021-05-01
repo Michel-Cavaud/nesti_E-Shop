@@ -1,1 +1,52 @@
-<div class="font-croissant text-blanc"> bla bla bla </div>
+<div class="flex w-full justify-center">
+     <img class="hidden md:flex text-center" src="{{asset('images/logonesti.png')}}" />
+     <img class="block md:hidden text-center" src="{{asset('images/logonesti.png')}}" width="15%" />
+</div>
+
+
+<nav class="sticky top-0 flex flex-wrap font-croissant text-base xl:text-xl">
+     <div class="flex md:hidden">
+          <button id="hamburger">
+               <img class="toggle block" src="{{asset('images/menu-squared-2.png')}}" width="40" height="40" />
+               <img class="toggle hidden" src="{{ asset('images/close-window.png')}}" width="40" height="40" />
+          </button>
+     </div>
+
+
+     <div class="hidden md:grid toggle grid-cols-1 md:grid-cols-5 auto-cols-fr w-full gap-4 my-5">
+          <div class=" text-4xl md:text-center self-center"><a href="" class="text-blanc hover:text-cyanclair"><i
+                         class="fas fa-shopping-cart"></i></a></div>
+          <div class="md:text-center">
+               <button
+                    class=" {{btnMenu[0]}} px-3 border-2 border-cyanclair bg-blanc rounded-md  w-38 xl:w-56 h-16 ">
+                    <a href="{{path('home')}}" class="">Nos suggestions</a></button>
+          </div>
+
+          <div class="md:text-center">
+               <button
+                    class=" {{btnMenu[1]}} px-3 border-2 border-cyanclair bg-blanc rounded-md  w-38 xl:w-56 h-16 ">
+                    <a href="#" class="">Nos recettes</a></button>
+          </div>
+
+          <div class="md:text-center">
+               <button
+                    class="{{btnMenu[2]}} px-3 border-2 border-cyanclair bg-blanc rounded-md  w-38 xl:w-56 h-16">
+                    <a href="#" class="">Le marchée</a></button>
+          </div>
+          <div class="text-blanc text-4xl md:text-center self-center"><a href=""
+                    class="text-blanc hover:text-cyanclair"><i class="far fa-user mr-5"></i><span
+                         class="text-base">Connexion</span></a>
+          </div>
+     </div>
+
+</nav>
+
+
+<script>
+     document.getElementById("hamburger").onclick = function toggleMenu() {
+          const navToggle = document.getElementsByClassName("toggle");
+          for (let i = 0; i < navToggle.length; i++) {
+               navToggle.item(i).classList.toggle("hidden");
+          }
+     };
+</script>

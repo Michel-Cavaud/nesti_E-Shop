@@ -2,131 +2,102 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RecettesRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Recettes
- *
- * @ORM\Table(name="recettes", uniqueConstraints={@ORM\UniqueConstraint(name="id_images", columns={"id_images"})}, indexes={@ORM\Index(name="id_chef", columns={"id_chef"})})
- * @ORM\Entity(repositoryClass="App\Repository\RecettesRepository")
+ * @ORM\Entity(repositoryClass=RecettesRepository::class)
  */
 class Recettes
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_recettes", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
+     * @Groups({"json_recette"})
      */
-    private $idRecettes;
+    private $id;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_creation_recettes", type="datetime", nullable=true, options={"default"="current_timestamp()"})
+     * @ORM\Column(type="datetime")
      */
-    private $dateCreationRecettes = 'current_timestamp()';
+    private $dateCreationRecettes;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nom_recettes", type="string", length=120, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"json_recette"})
      */
-    private $nomRecettes = 'NULL';
+    private $nomRecettes;
 
     /**
-     * @var bool|null
+     * @ORM\Column(type="integer")
+     * @Groups({"json_recette"})
      *
-     * @ORM\Column(name="difficulte_recettes", type="boolean", nullable=true, options={"default"="NULL"})
      */
-    private $difficulteRecettes = 'NULL';
+    private $difficulteRecettes;
+
+
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="nombre_personne_recettes", type="boolean", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=20)
      */
-    private $nombrePersonneRecettes = 'NULL';
+    private $etatRecettes;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="etat_recettes", type="string", length=0, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="time")
+     * @Groups({"json_recette"})
      */
-    private $etatRecettes = 'NULL';
+    private $tempsRecettes;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="temps_recettes", type="time", nullable=true, options={"default"="NULL"})
+     * 
      */
-    private $tempsRecettes = 'NULL';
+    private $tempsMn;
 
     /**
-     * @var \Chef
-     *
-     * @ORM\ManyToOne(targetEntity="Chef")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_chef", referencedColumnName="id_chef")
-     * })
+     * @ORM\Column(type="integer")
      */
-    private $idChef;
+    private $nombrePersonneRecettes;
 
     /**
-     * @var \Images
-     *
-     * @ORM\ManyToOne(targetEntity="Images")
+     * @ORM\OneToOne(targetEntity=Images::class, cascade={"persist", "remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_images", referencedColumnName="id_images")
      * })
+     * @Groups({"json_recette"})
      */
-    private $idImages;
+    private $images;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Utilisateurs", inversedBy="idRecettes")
-     * @ORM\JoinTable(name="donne_une_note",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="id_utilisateurs", referencedColumnName="id_utilisateurs")
-     *   }
-     * )
      */
-    private $idUtilisateurs;
+    private $idIngredientsRecette;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Categories", inversedBy="idRecettes")
-     * @ORM\JoinTable(name="list_categories",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="id_categories", referencedColumnName="id_categories")
-     *   }
-     * )
+     * @Groups({"json_recette"})
      */
-    private $idCategories;
+    private $idProduitsRecette;
 
     /**
-     * Constructor
+     * @ORM\OneToMany(targetEntity=Paragraphes::class, mappedBy="idRecettes")
      */
+    private $paragraphes;
+
+
+
+
     public function __construct()
     {
-        $this->idUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->idCategories = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->paragraphes = new ArrayCollection();
     }
 
-    public function getIdRecettes(): ?int
+    public function getId(): ?int
     {
-        return $this->idRecettes;
+        return $this->id;
     }
 
     public function getDateCreationRecettes(): ?\DateTimeInterface
@@ -134,7 +105,7 @@ class Recettes
         return $this->dateCreationRecettes;
     }
 
-    public function setDateCreationRecettes(?\DateTimeInterface $dateCreationRecettes): self
+    public function setDateCreationRecettes(\DateTimeInterface $dateCreationRecettes): self
     {
         $this->dateCreationRecettes = $dateCreationRecettes;
 
@@ -146,43 +117,33 @@ class Recettes
         return $this->nomRecettes;
     }
 
-    public function setNomRecettes(?string $nomRecettes): self
+    public function setNomRecettes(string $nomRecettes): self
     {
         $this->nomRecettes = $nomRecettes;
 
         return $this;
     }
 
-    public function getDifficulteRecettes(): ?bool
+    public function getDifficulteRecettes(): ?int
     {
         return $this->difficulteRecettes;
     }
 
-    public function setDifficulteRecettes(?bool $difficulteRecettes): self
+    public function setDifficulteRecettes(int $difficulteRecettes): self
     {
         $this->difficulteRecettes = $difficulteRecettes;
 
         return $this;
     }
 
-    public function getNombrePersonneRecettes(): ?bool
-    {
-        return $this->nombrePersonneRecettes;
-    }
 
-    public function setNombrePersonneRecettes(?bool $nombrePersonneRecettes): self
-    {
-        $this->nombrePersonneRecettes = $nombrePersonneRecettes;
-
-        return $this;
-    }
 
     public function getEtatRecettes(): ?string
     {
         return $this->etatRecettes;
     }
 
-    public function setEtatRecettes(?string $etatRecettes): self
+    public function setEtatRecettes(string $etatRecettes): self
     {
         $this->etatRecettes = $etatRecettes;
 
@@ -194,83 +155,108 @@ class Recettes
         return $this->tempsRecettes;
     }
 
-    public function setTempsRecettes(?\DateTimeInterface $tempsRecettes): self
+    public function setTempsRecettes(\DateTimeInterface $tempsRecettes): self
     {
         $this->tempsRecettes = $tempsRecettes;
 
         return $this;
     }
 
-    public function getIdChef(): ?Chef
+    public function getTempsMn()
     {
-        return $this->idChef;
+        return $this->tempsMn;
     }
 
-    public function setIdChef(?Chef $idChef): self
+    public function setTempsMn($tempsMn)
     {
-        $this->idChef = $idChef;
+        $this->tempsMn = $tempsMn;
 
         return $this;
     }
 
-    public function getIdImages(): ?Images
+    public function getNombrePersonneRecettes(): ?int
     {
-        return $this->idImages;
+        return $this->nombrePersonneRecettes;
     }
 
-    public function setIdImages(?Images $idImages): self
+    public function setNombrePersonneRecettes(int $nombrePersonneRecettes): self
     {
-        $this->idImages = $idImages;
+        $this->nombrePersonneRecettes = $nombrePersonneRecettes;
 
         return $this;
     }
 
-    /**
-     * @return Collection|Utilisateurs[]
-     */
-    public function getIdUtilisateurs(): Collection
+    public function getImages(): ?Images
     {
-        return $this->idUtilisateurs;
+        return $this->images;
     }
 
-    public function addIdUtilisateur(Utilisateurs $idUtilisateur): self
+    public function setImages(?Images $images): self
     {
-        if (!$this->idUtilisateurs->contains($idUtilisateur)) {
-            $this->idUtilisateurs[] = $idUtilisateur;
-        }
-
-        return $this;
-    }
-
-    public function removeIdUtilisateur(Utilisateurs $idUtilisateur): self
-    {
-        $this->idUtilisateurs->removeElement($idUtilisateur);
+        $this->images = $images;
 
         return $this;
     }
 
     /**
-     * @return Collection|Categories[]
+     * 
      */
-    public function getIdCategories(): Collection
+    public function getIdIngredientsRecette()
     {
-        return $this->idCategories;
+        return $this->idIngredientsRecette;
     }
 
-    public function addIdCategory(Categories $idCategory): self
+    public function addIdIngredientsRecette($ingredientsRecette): self
     {
-        if (!$this->idCategories->contains($idCategory)) {
-            $this->idCategories[] = $idCategory;
+
+        $this->idIngredientsRecette[] = $ingredientsRecette;
+
+
+        return $this;
+    }
+
+    /**
+     * 
+     */
+    public function getIdProduitsRecette()
+    {
+        return $this->idProduitsRecette;
+    }
+
+    public function addIdProduitsRecette($produitsRecette): self
+    {
+        $this->idProduitsRecette[] = strtolower($produitsRecette);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Paragraphes[]
+     */
+    public function getParagraphes(): Collection
+    {
+        return $this->paragraphes;
+    }
+
+    public function addParagraphe(Paragraphes $paragraphe): self
+    {
+        if (!$this->paragraphes->contains($paragraphe)) {
+            $this->paragraphes[] = $paragraphe;
+            $paragraphe->setIdRecettes($this);
         }
 
         return $this;
     }
 
-    public function removeIdCategory(Categories $idCategory): self
+    public function removeParagraphe(Paragraphes $paragraphe): self
     {
-        $this->idCategories->removeElement($idCategory);
+        if ($this->paragraphes->removeElement($paragraphe)) {
+            // set the owning side to null (unless already changed)
+            if ($paragraphe->getIdRecettes() === $this) {
+                $paragraphe->setIdRecettes(null);
+            }
+        }
 
         return $this;
     }
-
 }

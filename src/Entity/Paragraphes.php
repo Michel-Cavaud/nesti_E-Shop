@@ -3,58 +3,51 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ParagraphesRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 /**
- * Paragraphes
- *
- * @ORM\Table(name="paragraphes", indexes={@ORM\Index(name="id_recettes", columns={"id_recettes"})})
- * @ORM\Entity(repositoryClass="App\Repository\ParagraphesRepository")
+ * @ORM\Entity(repositoryClass=ParagraphesRepository::class)
  */
 class Paragraphes
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id_paragraphes", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
+     * @ORM\Column(name="id_paragraphes", type="integer", nullable=false)
      */
-    private $idParagraphes;
+    private $id;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="contenu_paragraphes", type="string", length=255, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"json_recette"})
      */
-    private $contenuParagraphes = 'NULL';
+    private $contenuParagraphes;
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="ordre_paragraphes", type="boolean", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="integer")
+     * @Groups({"json_recette"})
      */
-    private $ordreParagraphes = 'NULL';
+    private $ordreParagraphes;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_creation_paragraphes", type="datetime", nullable=true, options={"default"="current_timestamp()"})
+     * @ORM\Column(type="datetime")
      */
-    private $dateCreationParagraphes = 'current_timestamp()';
+    private $dateCreationParagraphes;
 
     /**
-     * @var \Recettes
-     *
-     * @ORM\ManyToOne(targetEntity="Recettes")
+     * @ORM\ManyToOne(targetEntity=Recettes::class)
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
      * })
+     * @Ignore()
      */
     private $idRecettes;
 
-    public function getIdParagraphes(): ?int
+    public function getId(): ?int
     {
-        return $this->idParagraphes;
+        return $this->id;
     }
 
     public function getContenuParagraphes(): ?string
@@ -62,19 +55,19 @@ class Paragraphes
         return $this->contenuParagraphes;
     }
 
-    public function setContenuParagraphes(?string $contenuParagraphes): self
+    public function setContenuParagraphes(string $contenuParagraphes): self
     {
         $this->contenuParagraphes = $contenuParagraphes;
 
         return $this;
     }
 
-    public function getOrdreParagraphes(): ?bool
+    public function getOrdreParagraphes(): ?int
     {
         return $this->ordreParagraphes;
     }
 
-    public function setOrdreParagraphes(?bool $ordreParagraphes): self
+    public function setOrdreParagraphes(int $ordreParagraphes): self
     {
         $this->ordreParagraphes = $ordreParagraphes;
 
@@ -86,7 +79,7 @@ class Paragraphes
         return $this->dateCreationParagraphes;
     }
 
-    public function setDateCreationParagraphes(?\DateTimeInterface $dateCreationParagraphes): self
+    public function setDateCreationParagraphes(\DateTimeInterface $dateCreationParagraphes): self
     {
         $this->dateCreationParagraphes = $dateCreationParagraphes;
 
@@ -104,6 +97,4 @@ class Paragraphes
 
         return $this;
     }
-
-
 }

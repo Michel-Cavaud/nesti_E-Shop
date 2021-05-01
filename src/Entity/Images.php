@@ -3,48 +3,41 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ImagesRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Images
- *
- * @ORM\Table(name="images")
- * @ORM\Entity(repositoryClass="App\Repository\ImagesRepository")
+ * @ORM\Entity(repositoryClass=ImagesRepository::class)
  */
 class Images
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id_images", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue
      */
-    private $idImages;
+    private $id;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_creation_images", type="datetime", nullable=true, options={"default"="current_timestamp()"})
+     * @ORM\Column(type="datetime")
      */
-    private $dateCreationImages = 'current_timestamp()';
+    private $dateCreationImages;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nom_images", type="string", length=50, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=50)
+     * @Groups({"json_recette"})
      */
-    private $nomImages = 'NULL';
+    private $nomImages;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="extension_images", type="string", length=0, nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="string", length=20)
+     * @Groups({"json_recette"})
      */
-    private $extensionImages = 'NULL';
+    private $extensionImages;
 
-    public function getIdImages(): ?int
+    public function getId(): ?int
     {
-        return $this->idImages;
+        return $this->id;
     }
 
     public function getDateCreationImages(): ?\DateTimeInterface
@@ -52,7 +45,7 @@ class Images
         return $this->dateCreationImages;
     }
 
-    public function setDateCreationImages(?\DateTimeInterface $dateCreationImages): self
+    public function setDateCreationImages(\DateTimeInterface $dateCreationImages): self
     {
         $this->dateCreationImages = $dateCreationImages;
 
@@ -64,7 +57,7 @@ class Images
         return $this->nomImages;
     }
 
-    public function setNomImages(?string $nomImages): self
+    public function setNomImages(string $nomImages): self
     {
         $this->nomImages = $nomImages;
 
@@ -76,12 +69,10 @@ class Images
         return $this->extensionImages;
     }
 
-    public function setExtensionImages(?string $extensionImages): self
+    public function setExtensionImages(string $extensionImages): self
     {
         $this->extensionImages = $extensionImages;
 
         return $this;
     }
-
-
 }

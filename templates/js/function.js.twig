@@ -1,0 +1,194 @@
+<script>
+//Créer un tableau des ingrédients validés par l'user
+function countCard() {
+    let arrayCardValid = [];
+    arrayCards.forEach((ingredient) => {
+        if (ingredient.valid) {
+            arrayCardValid.push(ingredient.name.toLowerCase());
+        }
+    });
+    return arrayCardValid;
+}
+
+//valide les recettes par rapport aux choix des ingrédients de l'utilisateur
+function searchRecipe() {
+    var cards = countCard();
+    for (var recipe in arrayRecipes) {
+        arrayRecipes[recipe].validRecipe(cards);
+    }
+}
+
+//mélanger un tableau
+function randomize(array) {
+    var i, j, tmp;
+    for (i = array.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+    return array;
+}
+
+// détection taille écran utilisateur
+function viewportSize() {
+    var d = document.documentElement;
+    return {
+        height: d.clientHeight,
+        width: d.clientWidth,
+    };
+}
+
+//positionnement des 2 cartes visibles
+function possitionCard(pos) {
+    let heightWindow = viewportSize().height;
+    let widthtWindow = viewportSize().width;
+
+    var pos2;
+    if (pos == arrayCards.length - 1) {
+        pos2 = 0;
+    } else {
+        pos2 = pos + 1;
+    }
+    if ((arrayCards[pos2].name.length > 10) & (widthtWindow < 550)) {
+        textBelow.style.fontSize = "2.4rem";
+    } else {
+        textBelow.removeAttribute("style");
+    }
+    textBelow.textContent = arrayCards[pos2].name;
+    imgBelow.setAttribute("alt", arrayCards[pos2].name);
+    imgBelow.setAttribute(
+        "src",
+        "./images/ingredients/" + arrayCards[pos2].picture + ".jpg"
+    );
+
+    if ((arrayCards[pos].name.length > 10) & (widthtWindow < 550)) {
+        textUp.style.fontSize = "2.4rem";
+    } else {
+        textUp.removeAttribute("style");
+    }
+    textUp.textContent = arrayCards[pos].name;
+    imgUp.setAttribute("alt", arrayCards[pos].name);
+    imgUp.setAttribute(
+        "src",
+        "./images/ingredients/" + arrayCards[pos].picture + ".jpg"
+    );
+
+    // diminuer la taille des images sur les écrans moins long pour éviter trop de scrolling
+
+    if ((heightWindow < 900) & (widthtWindow > 550)) {
+        imgBelow.setAttribute("height", "300px");
+        imgBelow.setAttribute("width", "300px");
+        imgUp.setAttribute("height", "300px");
+        imgUp.setAttribute("width", "300px");
+    } else {
+        imgBelow.removeAttribute("height");
+        imgBelow.removeAttribute("width");
+        imgUp.removeAttribute("height");
+        imgUp.removeAttribute("width");
+    }
+}
+
+//mouvement des cartes
+function moveCard(way, move) {
+    posRotate = randomize(posRotate);
+    posRotateCard = randomize(posRotateCard);
+    cardsI.classList.add("horizTranslate");
+    const transition = document.querySelector(".horizTranslate");
+    cardsI.style.transform = "translateX(" + way + move + "px)";
+
+    transition.ontransitionend = () => {
+        cardsI.style.zIndex = 1;
+        for (let i = 0; i < cards.length - 1; i++) {
+            cards[i].classList.replace(
+                cards[i].classList.item(0),
+                posRotate[i]
+            );
+            cards[i + 1].classList.replace(
+                cards[i + 1].classList.item(0),
+                posRotateCard[i]
+            );
+        }
+        cardsI.style.transform = "translateX(" + 0 + "px)";
+        transition.ontransitionend = () => {
+            posCard++;
+            if (posCard == arrayCards.length) {
+                posCard = 0;
+            }
+            possitionCard(posCard);
+            cardsI.classList.replace(
+                cardsI.classList.item(0),
+                posRotateCard[3]
+            );
+            cardsI.style.zIndex = 10;
+        };
+    };
+}
+
+function recipeDisplay() {
+    let recipeDiv = document.querySelector(".recipe");
+    let html = "";
+    let imgClass;
+    let divClass;
+    searchRecipe();
+    recipeDiv.style.zIndex = 0;
+    for (var recipe in arrayRecipes) {
+        if (arrayRecipes[recipe].valid) {
+            imgClass = "validImg";
+            divClass = "validDiv";
+        } else {
+            imgClass = "grayImg";
+            divClass = "grayDiv";
+        }
+
+        html +=
+            "<div class='tooltip " +
+            divClass +
+            " divsRecipe' id='" +
+            arrayRecipes[recipe].id +
+            "'><img class='rounded " +
+            imgClass +
+            "' alt='" +
+            arrayRecipes[recipe].name +
+            "' width='200px' height='200px' src ='{{LIEN_IMAGES_RECETTES}}" +
+            arrayRecipes[recipe].picture +
+            "'/><span class='tooltiptext'>" +
+            arrayRecipes[recipe].name +
+            "</span></div>";
+    }
+    recipeDiv.innerHTML = html;
+
+    var divsRecipe = document.querySelectorAll(".divsRecipe");
+    for (var i = 0; i < divsRecipe.length; i++) {
+        divsRecipe[i].addEventListener("click", function () {
+            window.location.href="{{ app.request.schemeAndHttpHost }}/recette/" + this.getAttribute("id");
+        });
+    }
+}
+
+function ingredientsDisplay() {
+    let html = "<div><h4>Ingrédients</h4></div><div class='liList'><ul>";
+    let flag = false;
+    for (var card in arrayCards) {
+        if (arrayCards[card].valid) {
+            html += "<li>" + arrayCards[card].name + "</li>";
+            flag = true;
+        }
+    }
+    html += "</ul></div><br/>";
+    html +=
+        "<div><button onclick='efface()' class='button'>Effacer</button></div>";
+    if (flag) {
+        list.innerHTML = html;
+    } else {
+        list.innerHTML = "";
+    }
+}
+function efface() {
+    for (var card in arrayCards) {
+        arrayCards[card].valid = false;
+    }
+    ingredientsDisplay();
+    recipeDisplay();
+}
+</script>

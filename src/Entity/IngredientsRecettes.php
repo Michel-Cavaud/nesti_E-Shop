@@ -2,106 +2,91 @@
 
 namespace App\Entity;
 
+use App\Repository\IngredientsRecettesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * IngredientsRecettes
- *
- * @ORM\Table(name="ingredients_recettes", indexes={@ORM\Index(name="id_unites_de_mesure", columns={"id_unites_de_mesure"}), @ORM\Index(name="id_recettes", columns={"id_recettes"}), @ORM\Index(name="IDX_9A9BE965EEF63319", columns={"id_produits"})})
- * @ORM\Entity(repositoryClass="App\Repository\IngredientsRecettesRepository")
+ * @ORM\Entity(repositoryClass=IngredientsRecettesRepository::class)
  */
 class IngredientsRecettes
 {
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="quantite_ingredients_recette", type="integer", nullable=true, options={"default"="NULL"})
-     */
-    private $quantiteIngredientsRecette = NULL;
+
 
     /**
-     * @var bool|null
-     *
-     * @ORM\Column(name="ordre_ingredients_recette", type="boolean", nullable=true, options={"default"="NULL"})
+     * @ORM\Column(type="integer")
      */
-    private $ordreIngredientsRecette = 'NULL';
+    private $quantiteIngredientsRecette;
 
     /**
-     * @var \Ingredients
-     *
+     * @ORM\Column(type="integer")
+     */
+    private $ordreIngredientsRecette;
+
+    /**
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Ingredients")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_produits", referencedColumnName="id_produits")
-     * })
+     * @ORM\Column(type="integer")
      */
     private $idProduits;
 
     /**
-     * @var \Recettes
-     *
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="NONE")
-     * @ORM\OneToOne(targetEntity="Recettes")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
-     * })
+     * @ORM\Column(type="integer")
      */
     private $idRecettes;
 
+
     /**
-     * @var \UnitesDeMesure
-     *
-     * @ORM\ManyToOne(targetEntity="UnitesDeMesure")
+     * @ORM\ManyToOne(targetEntity=UnitesDeMesure::class, cascade={"persist", "remove"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_unites_de_mesure", referencedColumnName="id_unites_de_mesure")
      * })
+     * 
      */
     private $idUnitesDeMesure;
+
 
     public function getQuantiteIngredientsRecette(): ?int
     {
         return $this->quantiteIngredientsRecette;
     }
 
-    public function setQuantiteIngredientsRecette(?int $quantiteIngredientsRecette): self
+    public function setQuantiteIngredientsRecette(int $quantiteIngredientsRecette): self
     {
         $this->quantiteIngredientsRecette = $quantiteIngredientsRecette;
 
         return $this;
     }
 
-    public function getOrdreIngredientsRecette(): ?bool
+    public function getOrdreIngredientsRecette(): ?int
     {
         return $this->ordreIngredientsRecette;
     }
 
-    public function setOrdreIngredientsRecette(?bool $ordreIngredientsRecette): self
+    public function setOrdreIngredientsRecette(int $ordreIngredientsRecette): self
     {
         $this->ordreIngredientsRecette = $ordreIngredientsRecette;
 
         return $this;
     }
 
-    public function getIdProduits(): ?Ingredients
+    public function getIdProduits(): ?int
     {
         return $this->idProduits;
     }
 
-    public function setIdProduits(?Ingredients $idProduits): self
+    public function setIdProduits(int $idProduits): self
     {
         $this->idProduits = $idProduits;
 
         return $this;
     }
 
-    public function getIdRecettes(): ?Recettes
+    public function getIdRecettes(): ?int
     {
         return $this->idRecettes;
     }
 
-    public function setIdRecettes(?Recettes $idRecettes): self
+    public function setIdRecettes(int $idRecettes): self
     {
         $this->idRecettes = $idRecettes;
 
@@ -119,6 +104,4 @@ class IngredientsRecettes
 
         return $this;
     }
-
-
 }
