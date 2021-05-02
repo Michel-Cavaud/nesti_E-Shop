@@ -3,8 +3,7 @@
      <img class="block md:hidden text-center" src="{{asset('images/logonesti.png')}}" width="15%" />
 </div>
 
-
-<nav class="sticky top-0 flex flex-wrap font-croissant text-base xl:text-xl">
+<nav class="flex flex-wrap font-croissant text-base xl:text-xl bg-fond" id="site-menu">
      <div class="flex md:hidden">
           <button id="hamburger">
                <img class="toggle block" src="{{asset('images/menu-squared-2.png')}}" width="40" height="40" />
@@ -31,7 +30,7 @@
           <div class="md:text-center">
                <button
                     class="{{btnMenu[2]}} px-3 border-2 border-cyanclair bg-blanc rounded-md  w-38 xl:w-56 h-16">
-                    <a href="#" class="">Le marchée</a></button>
+                    <a href="#" class="">Le marché</a></button>
           </div>
           <div class="text-blanc text-4xl md:text-center self-center"><a href=""
                     class="text-blanc hover:text-cyanclair"><i class="far fa-user mr-5"></i><span
@@ -41,7 +40,6 @@
 
 </nav>
 
-
 <script>
      document.getElementById("hamburger").onclick = function toggleMenu() {
           const navToggle = document.getElementsByClassName("toggle");
@@ -49,4 +47,19 @@
                navToggle.item(i).classList.toggle("hidden");
           }
      };
+
+     var nav = document.getElementById('site-menu');
+     window.addEventListener('scroll', function() {
+          //console.log(window.scrollY);
+          if(window.scrollX > 600){
+               taille = 290;
+          }else{
+               taille = 130;
+          }
+          if (window.scrollY >= taille) { 
+               nav.classList.add('nav-sticky');       
+          } else {
+               nav.classList.remove('nav-sticky');
+          }
+     });
 </script>

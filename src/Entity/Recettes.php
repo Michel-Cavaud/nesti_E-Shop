@@ -87,12 +87,24 @@ class Recettes
      */
     private $paragraphes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaires::class, mappedBy="idRecettes")
+     */
+    private $commentaires;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DonneUneNote::class, mappedBy="idRecettes")
+     */
+    private $donneUneNotes;
+
 
 
 
     public function __construct()
     {
         $this->paragraphes = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
+        $this->donneUneNotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -255,6 +267,63 @@ class Recettes
             if ($paragraphe->getIdRecettes() === $this) {
                 $paragraphe->setIdRecettes(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentaires[]
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaires $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setIdRecettes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaires $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getIdRecettes() === $this) {
+                $commentaire->setIdRecettes(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DonneUneNote[]
+     */
+    public function getDonneUneNotes(): Collection
+    {
+        return $this->donneUneNotes;
+    }
+
+    public function addDonneUneNote(DonneUneNote $donneUneNote): self
+    {
+        if (!$this->donneUneNotes->contains($donneUneNote)) {
+            $this->donneUneNotes[] = $donneUneNote;
+            $donneUneNote->addIdRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDonneUneNote(DonneUneNote $donneUneNote): self
+    {
+        if ($this->donneUneNotes->removeElement($donneUneNote)) {
+            $donneUneNote->removeIdRecette($this);
         }
 
         return $this;

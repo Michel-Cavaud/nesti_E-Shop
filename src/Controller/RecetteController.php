@@ -18,8 +18,12 @@ class RecetteController extends AbstractController
     public function index(int $id, RecettesRepository $repo, IngredientsRecettesRepository $repo2, ProduitsRepository $repo3, UnitesDeMesureRepository $repo4): Response
     {
         $this->data['btnMenu'] = ['text-noir hover:text-cyanclair', 'hover:text-noir text-cyanclair', 'text-noir hover:text-cyanclair'];
+        $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
 
         $recette = $repo->find($id);
+        if ($recette == null || $recette->getEtatRecettes() != 'a') {
+            return $this->redirectToRoute('home');
+        }
         $recette->setTempsMn($this->formatTempsMn(date_format($recette->getTempsRecettes(), 'H:i')));
 
         //Ajout ingredients et produits dans la recette
@@ -34,7 +38,47 @@ class RecetteController extends AbstractController
                 . $produit->getNomProduits();
             $recette->addIdIngredientsRecette($unIngredient);
         }
+        $noteUser = [0, 0, 0, 0, 0, 0];
+        $total = 0;
+        $nbNote = 0;
+        $moyenne = 0;
+        foreach ($recette->GetDonneUneNotes() as $note) {
+            switch ($note->getNoteSur5()) {
+                case 1:
+                    $noteUser[1]++;
+                    $total++;
+                    $nbNote++;
+                    break;
+                case 2:
+                    $noteUser[2]++;
+                    $total = $total + 2;
+                    $nbNote++;
+                    break;
+                case 3:
+                    $noteUser[3]++;
+                    $total = $total + 3;
+                    $nbNote++;
+                    break;
+                case 4:
+                    $noteUser[4]++;
+                    $total = $total + 4;
+                    $nbNote++;
+                    break;
+                case 5:
+                    $noteUser[5]++;
+                    $total = $total + 5;
+                    $nbNote++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if ($nbNote != 0) {
+            $moyenne = $total / $nbNote;
+        }
 
+        $this->data['noteUser'] = $noteUser;
+        $this->data['moyenne'] = $moyenne;
         $this->data['recette'] = $recette;
         return $this->render('recette/index.html.twig', $this->data);
     }

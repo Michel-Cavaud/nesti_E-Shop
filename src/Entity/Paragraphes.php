@@ -37,7 +37,7 @@ class Paragraphes
     private $dateCreationParagraphes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Recettes::class)
+     * @ORM\ManyToOne(targetEntity=Recettes::class, inversedBy="paragraphes")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
      * })

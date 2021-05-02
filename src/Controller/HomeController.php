@@ -21,6 +21,7 @@ class HomeController extends AbstractController
     {
 
         $this->data['btnMenu'] = ['hover:text-noir text-cyanclair', 'text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair'];
+        $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
 
         $recettes = $repo->findBy(['etatRecettes' => 'a']);
 
@@ -28,7 +29,7 @@ class HomeController extends AbstractController
         $this->data['jsonContent'] = $serializer->serialize($recettes, 'json', ['groups' => 'json_recette']);
         //return $this->json($recettes, 200, ['groups' => 'json_recette']);
         $this->data['recettes'] = $recettes;
-        $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
+
         return $this->render('home/index.html.twig', $this->data);
     }
 
