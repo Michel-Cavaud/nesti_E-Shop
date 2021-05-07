@@ -1,0 +1,130 @@
+ <script>
+    var lienConnexion = document.querySelector('#lienConnexion');
+    var connexion = document.querySelector('.connexion')
+    
+    connexion.addEventListener('click', function(event){
+      event.preventDefault();
+      if(lienConnexion.textContent === 'Connexion'){
+        toggleModal();
+      }else{
+        if(document.body.classList.contains('modal-active')){
+          toggleModalCommentaire();
+        }
+        
+        async function run() {
+          const response = await fetch('{{ path('security_logout') }}', {
+            method: 'POST',
+            headers: {
+              'X-Requested-With': 'xmlhttprequest'
+            }
+          });
+          let responseData = await response.json()
+          if (response.ok === true & responseData.success) {
+            lienConnexion.textContent = 'Connexion';
+            textToast.textContent = 'Déonnexion réussi !';
+            fondTost.classList.add('bg-vert');
+            tost.classList.toggle('hidden');
+            tost.classList.toggle('alert-toast');
+            setTimeout(fermerTost, 4000, 'bg-vert');
+          }
+        };
+        run();
+        
+      
+      }
+    })
+    
+    
+    const overlay = document.querySelector('.modal-overlay')
+    overlay.addEventListener('click', toggleModal)
+    
+    var closemodal = document.querySelectorAll('.modal-close')
+    for (var i = 0; i < closemodal.length; i++) {
+      closemodal[i].addEventListener('click', toggleModal)
+    }
+    
+    document.onkeydown = function(evt) {
+      evt = evt || window.event
+      var isEscape = false
+      if ("key" in evt) {
+      	isEscape = (evt.key === "Escape" || evt.key === "Esc")
+      } else {
+    	  isEscape = (evt.keyCode === 27)
+      }
+      if (isEscape && document.body.classList.contains('modal-active')) {
+    	  toggleModal();
+        toggleModalCommentaire();
+      }
+    };
+
+    let form = document.querySelector('#formConnexion');
+    var tost = document.querySelector('.tost');
+    var fondTost = document.querySelector('.fondTost');
+    var textToast = document.querySelector('.textToast');
+
+    form.addEventListener('submit', async function (e) {
+      event.preventDefault();
+      let data = new FormData(form)
+      try {
+        let response = await fetch(form.getAttribute('action'), {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        },
+        body: data
+        })
+        let responseData = await response.json()
+          if (response.ok === true & responseData.success) {
+            toggleModal ();
+            
+            lienConnexion.textContent = 'Déconnexion';
+            textToast.textContent = 'Connexion réussi !';
+            fondTost.classList.add('bg-vert');
+            tost.classList.toggle('hidden');
+            tost.classList.toggle('alert-toast');
+            setTimeout(fermerTost, 4000, 'bg-vert');
+          }else{
+            let username = document.querySelector('#username');
+            let password = document.querySelector('#password');
+            username.classList.add('border-rouge');
+            username.classList.remove('border');
+            username.classList.add('border-4');
+            password.classList.add('border-rouge');
+            password.classList.remove('border');
+            password.classList.add('border-4');
+            textToast.textContent = 'Vérifier vos identifiants ! !';
+            fondTost.classList.add('bg-rouge');
+            tost.classList.toggle('hidden');
+            tost.classList.toggle('alert-toast');
+            setTimeout(fermerTost, 4000, 'bg-rouge');
+
+          }
+      } catch (e){
+        alert(e)
+      }
+    });
+
+
+    //gestion nav petit écran
+    document.getElementById("hamburger").onclick = function toggleMenu() {
+        const navToggle = document.getElementsByClassName("toggle");
+        for (let i = 0; i < navToggle.length; i++) {
+              navToggle.item(i).classList.toggle("hidden");
+        }
+    };
+
+    var nav = document.getElementById('site-menu');
+    window.addEventListener('scroll', function() {
+        //console.log(window.scrollY);
+        if(window.scrollX > 600){
+              taille = 290;
+        }else{
+              taille = 130;
+        }
+        if (window.scrollY >= taille) { 
+              nav.classList.add('nav-sticky');       
+        } else {
+              nav.classList.remove('nav-sticky');
+        }
+    });
+  </script>

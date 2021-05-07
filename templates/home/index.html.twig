@@ -72,12 +72,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {# Carousel de recettes #}
     <script type="text/javascript" src="{{ asset('js/slider.js') }}"></script>
 
     {# Cartes des recettes #}
     {{ include('/json/recipe.json.twig') }}
-    {{ include('/js/function.js.twig') }}
+    
     {{ include('/js/listObjects.js.twig') }}
     {{ include('/js/createObjects.js.twig') }}
     {{ include('/js/managementCard.js.twig') }}

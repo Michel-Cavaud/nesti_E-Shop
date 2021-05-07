@@ -11,7 +11,10 @@ module.exports = {
       blanc: '#fff',
       fond: "#F9D195",
       cyanclair: '#99E3EC',
-      cyanfonce: '#6BBFC8' 
+      cyanfonce: '#6BBFC8',
+      vert:'rgb(16,185,129)',
+      rouge: 'rgb(239,68,68)',
+      bleue: 'rgb(59,130,246)'
     }
   },
   variants: {

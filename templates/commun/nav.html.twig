@@ -32,34 +32,10 @@
                     class="{{btnMenu[2]}} px-3 border-2 border-cyanclair bg-blanc rounded-md  w-38 xl:w-56 h-16">
                     <a href="#" class="">Le marché</a></button>
           </div>
-          <div class="text-blanc text-4xl md:text-center self-center"><a href=""
+          <div class="text-blanc text-4xl md:text-center self-center connexion"><a href=""
                     class="text-blanc hover:text-cyanclair"><i class="far fa-user mr-5"></i><span
-                         class="text-base">Connexion</span></a>
+                         class="text-base" id="lienConnexion">{% if app.user %}Déconnexion{% else %}Connexion{% endif %}</span></a>
           </div>
      </div>
 
 </nav>
-
-<script>
-     document.getElementById("hamburger").onclick = function toggleMenu() {
-          const navToggle = document.getElementsByClassName("toggle");
-          for (let i = 0; i < navToggle.length; i++) {
-               navToggle.item(i).classList.toggle("hidden");
-          }
-     };
-
-     var nav = document.getElementById('site-menu');
-     window.addEventListener('scroll', function() {
-          //console.log(window.scrollY);
-          if(window.scrollX > 600){
-               taille = 290;
-          }else{
-               taille = 130;
-          }
-          if (window.scrollY >= taille) { 
-               nav.classList.add('nav-sticky');       
-          } else {
-               nav.classList.remove('nav-sticky');
-          }
-     });
-</script>

@@ -1,0 +1,115 @@
+<script>
+
+let ajoutCommentaire = document.querySelector('.ajoutCommentaire');
+
+ ajoutCommentaire.addEventListener('click', async function (e) {
+      event.preventDefault();
+        
+        var data = new FormData();
+        data.append( 'id' , {{ recette.id }});
+        
+        let response = await fetch('{{ path('security_getuser') }}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        },
+        body : data
+        })
+        let responseData = await response.json()
+        if (response.ok === true & responseData.success) {
+          if(responseData.user == null){
+            toggleModal();
+          }else{
+            toggleModalCommentaire();
+          }
+        }else{
+          textToast.textContent = 'Vous avez déjà commenté cette recette !';
+          fondTost.classList.add('bg-rouge');
+          tost.classList.toggle('hidden');
+          tost.classList.toggle('alert-toast');
+          setTimeout(fermerTost, 4000, 'bg-rouge');
+
+        }
+ });
+
+  const overlayCommentaire = document.querySelector('.modalCommentaire-overlay')
+  overlayCommentaire.addEventListener('click', toggleModalCommentaire)
+    
+  var closemodalCommentaire = document.querySelectorAll('.modalCommentaire-close')
+  for (var i = 0; i < closemodalCommentaire.length; i++) {
+    closemodalCommentaire[i].addEventListener('click', toggleModalCommentaire)
+  }
+
+  let formCommentaire = document.querySelector('#formCommentaire');
+
+  formCommentaire.addEventListener('submit', async function (e) {
+      event.preventDefault();
+      let data = new FormData(formCommentaire);
+      data.append( 'note' , valeurStar);
+      let response = await fetch(formCommentaire.getAttribute('action'), {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        },
+        body: data
+      })
+      let responseData = await response.json();
+      let titre = document.querySelector('#titreCommentaire');
+      let contenu = document.querySelector('#contenuCommentaire');
+      titre.classList.remove('border-rouge');
+      titre.classList.remove('border-4');
+      titre.classList.add('border');
+      contenu.classList.remove('border-rouge');
+      contenu.classList.remove('border-4');
+      contenu.classList.add('border');
+
+
+      if (response.ok === true & responseData.success) {
+        textToast.textContent = 'Votre commentaire va être valider par un modérateur sous 48h ! !';
+        fondTost.classList.add('bg-vert');
+        tost.classList.toggle('hidden');
+        tost.classList.toggle('alert-toast');
+        setTimeout(fermerTost, 4000, 'bg-vert');
+        titre.value = '';
+        contenu.value ='';
+        toggleModalCommentaire();
+      }else{
+        
+        if(responseData.titreCommentaire){
+          titre.classList.add('border-rouge');
+          titre.classList.add('border-4');
+          titre.classList.remove('border');
+        }
+       
+        if(responseData.contenuCommentaire){
+          contenu.classList.add('border-rouge');
+          contenu.classList.add('border-4');
+          contenu.classList.remove('border');
+        }
+        textToast.textContent = 'Vérifier vos informations de commentaire ! !';
+        fondTost.classList.add('bg-rouge');
+        tost.classList.toggle('hidden');
+        tost.classList.toggle('alert-toast');
+        setTimeout(fermerTost, 4000, 'bg-rouge');
+      }
+
+  });
+
+  var stars = document.querySelectorAll('.rating a');
+   for (var i = 0; i < stars.length; i++) {
+      stars[i].addEventListener('click', function(){valStar(this)}, false);
+  }
+  var valeurStar = 0;
+  
+  function valStar(star){
+    valeurStar = star.getAttribute('data-val');
+     for (var i = 0; i < stars.length; i++) {
+      stars[i].removeAttribute('style');
+    }
+
+    for (var i = 0; i <  valeurStar ; i++) {
+      stars[4 - i].style.color= "orange";
+    }
+  }
+
+</script>

@@ -191,4 +191,37 @@ function efface() {
     ingredientsDisplay();
     recipeDisplay();
 }
+
+//affichage u pas du modal de connexion
+function toggleModal () {
+    const body = document.querySelector('body');
+    const modal = document.querySelector('.modal');
+    modal.classList.toggle('hidden');
+    modal.classList.toggle('pointer-events-none');
+    body.classList.toggle('modal-active');
+    username.classList.remove('border-rouge');
+    username.classList.remove('border-4');
+    username.classList.add('border');
+    password.classList.remove('border-rouge');
+    password.classList.add('border');
+    password.classList.remove('border-4');
+    username.value = '';
+    password.value = '';
+}
+
+//affichage u pas du modal de connexion
+function toggleModalCommentaire () {
+    const body = document.querySelector('body');
+    const modalCommentaire = document.querySelector('.modalCommentaire');
+    modalCommentaire.classList.toggle('hidden');
+    modalCommentaire.classList.toggle('pointer-events-none');
+    body.classList.toggle('modal-active');
+}
+
+//fermeture du tost
+function fermerTost(fond){
+    tost.classList.toggle('hidden');
+    tost.classList.toggle('alert-toast');
+    fondTost.classList.remove(fond);
+}
 </script>

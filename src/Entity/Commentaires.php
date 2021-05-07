@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentairesRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CommentairesRepository;
 
 /**
  * @ORM\Entity(repositoryClass=CommentairesRepository::class)
@@ -12,11 +13,13 @@ class Commentaires
 {
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=1, minMessage="Indiquez un titre à votre commentaire !")
      */
     private $titreCommentaires;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=1, minMessage="Indiquez un commentaire !")
      */
     private $contenuCommentaires;
 
@@ -31,7 +34,7 @@ class Commentaires
     private $dateCreationCommentaires;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Recettes::class, inversedBy="commentaires")
+     * @ORM\ManyToOne(targetEntity=Recettes::class, inversedBy="commentaires", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_recettes", referencedColumnName="id_recettes")
      * })
@@ -40,13 +43,18 @@ class Commentaires
     private $idRecettes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateurs::class)
+     * @ORM\ManyToOne(targetEntity=Utilisateurs::class, inversedBy="commentaires", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateurs", referencedColumnName="id_utilisateurs")
      * })
      * @ORM\Id
      */
     private $idUtilisateurs;
+
+    public function _construct()
+    {
+        $this->dateCreationCommentaires = new \DateTime();
+    }
 
     public function getId(): ?int
     {

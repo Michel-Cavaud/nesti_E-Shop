@@ -2,15 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\UtilisateursRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\UtilisateursRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UtilisateursRepository::class)
  */
-class Utilisateurs
+class Utilisateurs implements UserInterface
 {
     /**
      * @ORM\Id
@@ -20,9 +21,10 @@ class Utilisateurs
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * 
+     * @ORM\Column(name="pseudo_utilisateurs", type="string", length=255)
      */
-    private $pseudoUtilisateurs;
+    private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -40,9 +42,9 @@ class Utilisateurs
     private $emailUtilisateurs;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     *  @ORM\Column(name="mdp_utilisateurs", type="string", length=255)
      */
-    private $mdpUtilisateurs;
+    private $password;
 
     /**
      * @ORM\Column(type="string", length=10)
@@ -92,14 +94,19 @@ class Utilisateurs
         return $this->id;
     }
 
-    public function getPseudoUtilisateurs(): ?string
+    public function setId($id)
     {
-        return $this->pseudoUtilisateurs;
+        $this->id = $id;
     }
 
-    public function setPseudoUtilisateurs(string $pseudoUtilisateurs): self
+    public function getUsername(): ?string
     {
-        $this->pseudoUtilisateurs = $pseudoUtilisateurs;
+        return $this->username;
+    }
+
+    public function setUsername(string $pseudoUtilisateurs): self
+    {
+        $this->username = $pseudoUtilisateurs;
 
         return $this;
     }
@@ -140,14 +147,14 @@ class Utilisateurs
         return $this;
     }
 
-    public function getMdpUtilisateurs(): ?string
+    public function getPassword(): ?string
     {
-        return $this->mdpUtilisateurs;
+        return $this->password;
     }
 
-    public function setMdpUtilisateurs(string $mdpUtilisateurs): self
+    public function setPassWord(string $mdpUtilisateurs): self
     {
-        $this->mdpUtilisateurs = $mdpUtilisateurs;
+        $this->password = $mdpUtilisateurs;
 
         return $this;
     }
@@ -267,5 +274,16 @@ class Utilisateurs
         }
 
         return $this;
+    }
+
+    public function eraseCredentials()
+    {
+    }
+    public function getSalt()
+    {
+    }
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
     }
 }

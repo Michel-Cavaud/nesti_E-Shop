@@ -47,4 +47,19 @@ class CommentairesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function insertCommentaires($commentaire)
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $contenu = nl2br(stripslashes(strip_tags($commentaire->getContenuCommentaires())));
+
+        $sql = "INSERT INTO `commentaires` (`id_utilisateurs`, `id_recettes`, `titre_commentaires`, `contenu_commentaires`, 
+        `etat_commentaires`) VALUES (:idUser, :idRecette, :titre, :contenu, 'b')";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array(
+            'idUser' => $commentaire->getIdUtilisateurs()->getId(), 'idRecette' => $commentaire->getIdRecettes()->getId(),
+            'titre' => $commentaire->getTitreCommentaires(), 'contenu' => $contenu
+        ));
+    }
 }

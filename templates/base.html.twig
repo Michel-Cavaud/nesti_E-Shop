@@ -18,8 +18,11 @@
 <body>
     <header>
         {{ include('/commun/nav.html.twig') }}
+       
     </header>
     <main>
+     {{ include('/commun/modalLogin.html.twig') }}
+     {{ include('/commun/tost.html.twig') }}
         {% block body %}{% endblock %}
     </main>
     <footer>
@@ -27,7 +30,9 @@
     </footer>
 
     {% block javascripts %}
-    {{ encore_entry_script_tags('app') }}
+        {{ encore_entry_script_tags('app') }}
+        {{ include('/js/function.js.twig') }}
+        {{ include('/js/commun.js.twig') }}
     {% endblock %}
 </body>
 

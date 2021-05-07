@@ -1,0 +1,58 @@
+
+<div class="modalCommentaire hidden pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+    <div class="modalCommentaire-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+    
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+      
+        
+
+      <!-- Add margin if you want to see some of the overlay behind the modal-->
+      <div class="modal-content bg-blanc py-4 text-left px-6">
+        <!--Title-->
+        <div class="flex justify-between items-center pb-3">
+          <p class="text-3xl font-bold text-cyanfonce">Commentaire</p>
+          <div class="modalCommentaire-close cursor-pointer z-50">
+            <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+              <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="block text-center text-sm font-bold text-2xl text-cyanfonce">Je donne une note à la recette</div>
+        <div class="rating text-center"><!--
+          --><a href="#5" data-val="5" title="Donner 5 étoiles">★</a><!--
+          --><a href="#4" data-val="4" title="Donner 4 étoiles">★</a><!--
+          --><a href="#3" data-val="3" title="Donner 3 étoiles">★</a><!--
+          --><a href="#2" data-val="2" title="Donner 2 étoiles">★</a><!--
+          --><a href="#1" data-val="1" title="Donner 1 étoile">★</a>
+        </div>
+        <!--Body-->
+        <form action="{{ path('recette_setcommentaire')}}" id="formCommentaire" class="pt-1 pb-2 my-2">
+            <input type="hidden" value="{{ recette.id }}" name="idRecette" id="idRecette" />
+            <div class="mb-4">
+                <label class="block text-sm font-bold text-2xl mb-2 text-cyanfonce" for="titreCommentaire">
+                    Titre de votre commentaire
+                </label>
+                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" 
+                id="titreCommentaire" name="titreCommentaire" type="text" placeholder="Titre de votre commentaire">
+            </div>
+            <div class="mb-1">
+                <label class="block text-sm font-bold text-2xl mb-2 text-cyanfonce"  for="contenuCommentaire">
+                    Votre commentaire
+                </label>
+                <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker mb-2" 
+                id="contenuCommentaire" name="contenuCommentaire"  placeholder="Votre commentaire"></textarea>
+            </div>
+            <div>Votre commentaire devra être apprové par un modérateur sous 48h</div>
+            <!--Footer-->
+            <div class="flex justify-end pt-2">
+                <button type="reset" class="modalCommentaire-close px-4 p-3 rounded-lg text-cyanfonce hover:text-noir hover:bg-cyanclair">Fermer</button>
+                <button type="submit" class=" px-4  p-3 rounded-lg text-cyanfonce hover:text-noir  hover:font-bold  hover:bg-cyanclair
+                 hover:text-indigo-400 mr-2">Enregistrer</button>
+            
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
