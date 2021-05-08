@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+{% for categorie in categories%}  
+     <div class="w-96 ml-9 my-5">
+          <h2 class="titreList font-croissant text-center text-3xl rounded-md bg-blanc py-5">{{categorie.nomCategories}}</h2>
+     </div>  
+     <div class="marquee">
+          <ul class="marquee-content listsRecette">
+               {% for recette in recettes[categorie.id] %}
+               <li>
+                    <a href="{{path('recette',{id : recette.id})}}" class="mx-1 tooltip">
+                         <img src="{{LIEN_IMAGES_RECETTES}}{{recette.images.nomImages}}.{{recette.images.extensionImages}}">
+                         <span class="tooltiptext">{{ recette.nomRecettes }}</span>
+                    </a>
+               </li>
+               {% endfor %}
+          </ul>
+     </div>
+{% endfor %}
+
+{% endblock %}
+
+{% block javascripts %}
+     {{ parent() }}
+     
+
+{% endblock %}

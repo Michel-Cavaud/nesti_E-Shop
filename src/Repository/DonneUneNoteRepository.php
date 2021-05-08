@@ -47,4 +47,17 @@ class DonneUneNoteRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function insertCommentaires($note)
+    {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+
+        $sql = "INSERT INTO `donne_une_note` (`id_utilisateurs`, `id_recettes`, `note_sur5`) 
+        VALUES (:idUser, :idRecette, :note)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array(
+            'idUser' => $note->getIdUtilisateurs()->getId(), 'idRecette' => $note->getIdRecettes()->getId(),
+            'note' => $note->getNoteSur5()
+        ));
+    }
 }

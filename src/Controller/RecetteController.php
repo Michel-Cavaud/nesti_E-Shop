@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Recettes;
 use App\Entity\Commentaires;
+use App\Entity\DonneUneNote;
 use App\Entity\Utilisateurs;
 use App\Repository\ProduitsRepository;
 use App\Repository\RecettesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CommentairesRepository;
+use App\Repository\DonneUneNoteRepository;
 use App\Repository\UnitesDeMesureRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -90,14 +92,13 @@ class RecetteController extends AbstractController
     }
 
     #[Route('/recette/ajoutcommentaire', name: 'recette_setcommentaire', methods: ['POST'])]
-    public function ajoutCommentaire(Request $request, CommentairesRepository $repo)
+    public function ajoutCommentaire(Request $request, CommentairesRepository $repo, DonneUneNoteRepository $repo2)
     {
         if ($request->isMethod('POST')) {
             $titre = $request->request->get('titreCommentaire');
             $contenu = $request->request->get('contenuCommentaire');
             $idRecette = $request->request->get('idRecette');
             $note = $request->request->get('note');
-            dd($note);
 
             $retour['success'] = true;
             if ($titre == '') {
@@ -123,7 +124,20 @@ class RecetteController extends AbstractController
                 $commentaire->setIdUtilisateurs($user);
 
                 $repo->insertCommentaires($commentaire);
+
+                if ($note != 0) {
+                    $noteObj = new DonneUneNote();
+                    $noteObj->setNoteSur5($note);
+
+                    $noteObj->setIdrecettes($recette);
+
+                    $noteObj->setIdUtilisateurs($user);
+
+                    $repo2->insertCommentaires($noteObj);
+                }
             }
+
+
 
             $response = new Response(json_encode($retour));
             $response->headers->set('Content-Type', 'application/json');

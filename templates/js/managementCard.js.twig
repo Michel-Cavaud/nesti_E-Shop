@@ -59,4 +59,36 @@ sweep.addEventListener("click", function () {
 
 randomize(arrayRecipes);
 recipeDisplay();
+
+
+//liste dernières recettes
+//localStorage.clear();
+titreList = document.querySelector('.titreList');
+listRecette = document.querySelector('.listRecette');
+if(localStorage.getItem('recettes')){
+    recetteLocal = JSON.parse(localStorage.getItem('recettes'));
+    recetteLocal.forEach((recette) => {
+        let li = document.createElement("li");
+        li.setAttribute("id", recette.id); 
+        li.setAttribute("class", 'imgRecette');
+        let html =  '<div class="mx-1 tooltip">';
+        html +=          '<img class="rounded" src="{{LIEN_IMAGES_RECETTES}}' + recette.nomImage + '.' + recette.extImage + '"/>';
+        html += '<span class="tooltiptext">' + recette.nomRecette + '</span>'
+        html +=     '</div>';
+        li.innerHTML = html;
+        listRecette.appendChild(li)
+    });
+    
+    let imgRecette = document.querySelectorAll('.imgRecette')
+    for (var i = 0; i < imgRecette.length; i++) {
+        imgRecette[i].addEventListener("click", function () {
+            window.location.href="{{ app.request.schemeAndHttpHost }}/recette/" + this.getAttribute("id");
+        });
+    }
+}else{
+    titreList.classList.toggle('hidden');
+    listRecette.classList.toggle('hidden');
+}
+
+
 </script>

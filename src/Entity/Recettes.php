@@ -97,6 +97,11 @@ class Recettes
      */
     private $donneUneNotes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ListCategories::class, mappedBy="idRecettes")
+     */
+    private $listCategories;
+
 
 
 
@@ -105,6 +110,7 @@ class Recettes
         $this->paragraphes = new ArrayCollection();
         $this->commentaires = new ArrayCollection();
         $this->donneUneNotes = new ArrayCollection();
+        $this->listCategories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -328,6 +334,36 @@ class Recettes
     {
         if ($this->donneUneNotes->removeElement($donneUneNote)) {
             $donneUneNote->removeIdRecette($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ListCategories[]
+     */
+    public function getListCategories(): Collection
+    {
+        return $this->listCategories;
+    }
+
+    public function addListCategory(ListCategories $listCategory): self
+    {
+        if (!$this->listCategories->contains($listCategory)) {
+            $this->listCategories[] = $listCategory;
+            $listCategory->setIdRecettes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeListCategory(ListCategories $listCategory): self
+    {
+        if ($this->listCategories->removeElement($listCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($listCategory->getIdRecettes() === $this) {
+                $listCategory->setIdRecettes(null);
+            }
         }
 
         return $this;

@@ -1,10 +1,42 @@
 <script>
+//localStorage.clear();
+
+class recette {
+    constructor(id, nomRecette, nomImage, extImage) {
+        this.id = id;
+        this.nomRecette = nomRecette;
+        this.nomImage = nomImage;
+        this.extImage = extImage;
+    }
+}
+var recetteObj = new recette({{recette.id}}, '{{recette.nomRecettes}}', '{{recette.images.nomImages}}', '{{recette.images.extensionImages}}'
+);
+
+if(localStorage.getItem('recettes')){
+  recetteLocal = JSON.parse(localStorage.getItem('recettes'));
+  let flag = true
+  recetteLocal.forEach((recette) => {
+      if(recetteObj.id == recette.id){
+        flag = false
+      }
+  });
+  if(flag){
+    if(recetteLocal.length > 2){
+      recetteLocal.shift();
+    }
+    recetteLocal.push(recetteObj);
+    localStorage.setItem("recettes",JSON.stringify(recetteLocal));
+  } 
+}else{
+  var recetteLocal = [];
+  recetteLocal.push(recetteObj);
+  localStorage.setItem("recettes",JSON.stringify(recetteLocal));
+  
+}
 
 let ajoutCommentaire = document.querySelector('.ajoutCommentaire');
-
  ajoutCommentaire.addEventListener('click', async function (e) {
       event.preventDefault();
-        
         var data = new FormData();
         data.append( 'id' , {{ recette.id }});
         
@@ -72,7 +104,11 @@ let ajoutCommentaire = document.querySelector('.ajoutCommentaire');
         setTimeout(fermerTost, 4000, 'bg-vert');
         titre.value = '';
         contenu.value ='';
-        toggleModalCommentaire();
+        if(valeurStar !=0){
+          document.location.reload();
+        }else{
+          toggleModalCommentaire();
+        }
       }else{
         
         if(responseData.titreCommentaire){

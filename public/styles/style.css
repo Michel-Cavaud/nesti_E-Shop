@@ -40,11 +40,18 @@ body {
   right: 0;
   background: linear-gradient(to left, #111 0%, transparent 100%);
 }*/
+
 .marquee-content {
   list-style: none;
   height: 100%;
   display: flex;
   animation: scrolling var(--marquee-animation-duration) linear infinite;
+}
+
+.listRecette {
+  list-style: none;
+  height: 100%;
+  display: flex;
 }
 /* .marquee-content:hover {
   animation-play-state: paused;
@@ -53,6 +60,7 @@ body {
   0% { transform: translateX(0); }
   100% { transform: translateX(calc(-1 * var(--marquee-element-width) * var(--marquee-elements))); }
 }
+.listRecette li,
 .marquee-content li {
   display: flex;
   justify-content: center;
@@ -61,8 +69,7 @@ body {
   flex-shrink: 0;
   width: var(--marquee-element-width);
   max-height: 100%;
-  font-size: calc(var(--marquee-height)*3/4); /* 5rem; */
-  white-space: nowrap;
+
 }
 
 .marquee-content li img {
@@ -135,6 +142,21 @@ li {
    color: orange;
    cursor: pointer;
 }
+
+.star{
+   color: #aaa;
+   text-decoration: none;
+   font-size: 1.2em;
+}
+.starValid{
+  color: orange;
+}
+
+.listsRecette{
+  display: flex;
+  justify-content: center;
+}
+
 
 @media only screen and (max-width: 600px) {
  

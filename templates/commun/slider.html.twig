@@ -6,8 +6,9 @@
     <ul class="marquee-content">
         {% for recette in recettes %}
             <li>
-               <a href="{{path('recette',{id : recette.id})}}" class="mx-1">
+               <a href="{{path('recette',{id : recette.id})}}" class="mx-1 tooltip">
                     <img src="{{LIEN_IMAGES_RECETTES}}{{recette.images.nomImages}}.{{recette.images.extensionImages}}">
+                    <span class="tooltiptext">{{ recette.nomRecettes }}</span>
                 </a>
             </li>
         {% endfor %}

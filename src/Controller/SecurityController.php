@@ -26,15 +26,18 @@ class SecurityController extends AbstractController
     public function user(Request $request, CommentairesRepository $repo)
     {
         $user = $this->getUser();
-        $idRecette = $request->request->get('id');
-
-        $comUser = $repo->findOneBy(['idRecettes' => $idRecette, 'idUtilisateurs' => $user->getId()]);
-        if ($comUser != null) {
-            $array = array('success' => false);
-        } else {
+        if ($user == null) {
             $array = array('success' => true, 'user' => $user);
-        }
+        } else {
+            $idRecette = $request->request->get('id');
 
+            $comUser = $repo->findOneBy(['idRecettes' => $idRecette, 'idUtilisateurs' => $user->getId()]);
+            if ($comUser != null) {
+                $array = array('success' => false);
+            } else {
+                $array = array('success' => true, 'user' => $user);
+            }
+        }
 
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
