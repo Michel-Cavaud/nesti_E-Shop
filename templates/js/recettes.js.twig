@@ -1,0 +1,38 @@
+<script>
+
+var recherche = document.querySelector('#recherche');
+var gomme = document.querySelector('.gomme');
+var affichageRecettes = document.querySelector('.affichageRecettes');
+
+gomme.addEventListener('click', function(){
+  recherche.value = "";
+  document.location.reload();
+});
+
+ recherche.addEventListener('keyup', async function (e) {
+    event.preventDefault();
+    if(recherche.value == ''){
+        gomme.classList.add('hidden');
+    }else{
+        gomme.classList.remove('hidden');
+    }
+    if(recherche.value.length > 2){
+        var data = new FormData();
+        data.append( 'mot' , recherche.value);
+        let response = await fetch('{{ path('recherche_recettes') }}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        },
+        body : data
+        })
+        let responseData = await response.json();
+        if (response.ok === true & responseData.success) {
+            affichageRecettes.innerHTML = responseData.html;
+
+        }
+    }
+
+});
+
+</script>

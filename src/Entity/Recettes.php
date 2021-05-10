@@ -102,6 +102,14 @@ class Recettes
      */
     private $listCategories;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Utilisateurs::class)
+     *  @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_chef", referencedColumnName="id_utilisateurs")
+     * })
+     */
+    private $idChef;
+
 
 
 
@@ -146,9 +154,28 @@ class Recettes
         return $this;
     }
 
-    public function getDifficulteRecettes(): ?int
+    public function getDifficulteRecettes(): ?string
     {
-        return $this->difficulteRecettes;
+        switch ($this->difficulteRecettes) {
+            case 1:
+                $val = 'Très facile';
+                break;
+            case 2:
+                $val = 'Facile';
+                break;
+            case 3:
+                $val = 'Moyenne';
+                break;
+            case 4:
+                $val = 'Difficile';
+                break;
+            case 5:
+                $val = 'Très difficile';
+                break;
+            default:
+                $val = 'Non inscrite';
+        }
+        return $val;
     }
 
     public function setDifficulteRecettes(int $difficulteRecettes): self
@@ -186,7 +213,14 @@ class Recettes
 
     public function getTempsMn()
     {
-        return $this->tempsMn;
+        $arrayTemps = explode(":", date_format($this->tempsRecettes, 'H:i'));
+        if ($arrayTemps[0] == '00') {
+            $retour = $arrayTemps[1];
+        } else {
+            $retour = $arrayTemps[0] * 60 + $arrayTemps[1];
+        }
+
+        return $retour;
     }
 
     public function setTempsMn($tempsMn)
@@ -313,11 +347,51 @@ class Recettes
     }
 
     /**
-     * @return Collection|DonneUneNote[]
+     *
      */
-    public function getDonneUneNotes(): Collection
+    public function getDonneUneNotes()
     {
-        return $this->donneUneNotes;
+        $noteUser = [0, 0, 0, 0, 0, 0];
+        $total = 0;
+        $nbNote = 0;
+        $moyenne = 0;
+        foreach ($this->donneUneNotes as $note) {
+            switch ($note->getNoteSur5()) {
+                case 1:
+                    $noteUser[1]++;
+                    $total++;
+                    $nbNote++;
+                    break;
+                case 2:
+                    $noteUser[2]++;
+                    $total = $total + 2;
+                    $nbNote++;
+                    break;
+                case 3:
+                    $noteUser[3]++;
+                    $total = $total + 3;
+                    $nbNote++;
+                    break;
+                case 4:
+                    $noteUser[4]++;
+                    $total = $total + 4;
+                    $nbNote++;
+                    break;
+                case 5:
+                    $noteUser[5]++;
+                    $total = $total + 5;
+                    $nbNote++;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if ($nbNote != 0) {
+            $moyenne = $total / $nbNote;
+        }
+        $data['note']['noteUser'] = $noteUser;
+        $data['note']['moyenne'] = $moyenne;
+        return $data;
     }
 
     public function addDonneUneNote(DonneUneNote $donneUneNote): self
@@ -365,6 +439,18 @@ class Recettes
                 $listCategory->setIdRecettes(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdChef(): ?Utilisateurs
+    {
+        return $this->idChef;
+    }
+
+    public function setIdChef(?Utilisateurs $idChef): self
+    {
+        $this->idChef = $idChef;
 
         return $this;
     }

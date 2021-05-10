@@ -47,4 +47,15 @@ class RecettesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function rechercheRecettes($mot)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.etatRecettes = :a')
+            ->andWhere('r.nomRecettes LIKE :recherche')
+            ->setParameter('recherche', '%' . $mot . '%')
+            ->setParameter('a', 'a')
+            ->getQuery()
+            ->execute();
+    }
 }

@@ -103,13 +103,13 @@ li {
     background-size: contain;
 }
 
-    .modal {
-      transition: opacity 0.25s ease;
-    }
-    body.modal-active {
-      overflow-x: hidden;
-      overflow-y: visible !important;
-    }
+  .modal {
+    transition: opacity 0.25s ease;
+  }
+  body.modal-active {
+    overflow-x: hidden;
+    overflow-y: visible !important;
+  }
 
     
 	/*Toast open/load animation*/
@@ -150,11 +150,6 @@ li {
 }
 .starValid{
   color: orange;
-}
-
-.listsRecette{
-  display: flex;
-  justify-content: center;
 }
 
 

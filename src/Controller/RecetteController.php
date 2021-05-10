@@ -8,7 +8,6 @@ use App\Entity\DonneUneNote;
 use App\Entity\Utilisateurs;
 use App\Repository\ProduitsRepository;
 use App\Repository\RecettesRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CommentairesRepository;
 use App\Repository\DonneUneNoteRepository;
 use App\Repository\UnitesDeMesureRepository;
@@ -32,7 +31,6 @@ class RecetteController extends AbstractController
         if ($recette == null || $recette->getEtatRecettes() != 'a') {
             return $this->redirectToRoute('home');
         }
-        $recette->setTempsMn($this->formatTempsMn(date_format($recette->getTempsRecettes(), 'H:i')));
 
         //Ajout ingredients et produits dans la recette
         $ingredents = $repo2->findByidRecettes($recette->getId());
@@ -46,47 +44,7 @@ class RecetteController extends AbstractController
                 . $produit->getNomProduits();
             $recette->addIdIngredientsRecette($unIngredient);
         }
-        $noteUser = [0, 0, 0, 0, 0, 0];
-        $total = 0;
-        $nbNote = 0;
-        $moyenne = 0;
-        foreach ($recette->GetDonneUneNotes() as $note) {
-            switch ($note->getNoteSur5()) {
-                case 1:
-                    $noteUser[1]++;
-                    $total++;
-                    $nbNote++;
-                    break;
-                case 2:
-                    $noteUser[2]++;
-                    $total = $total + 2;
-                    $nbNote++;
-                    break;
-                case 3:
-                    $noteUser[3]++;
-                    $total = $total + 3;
-                    $nbNote++;
-                    break;
-                case 4:
-                    $noteUser[4]++;
-                    $total = $total + 4;
-                    $nbNote++;
-                    break;
-                case 5:
-                    $noteUser[5]++;
-                    $total = $total + 5;
-                    $nbNote++;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if ($nbNote != 0) {
-            $moyenne = $total / $nbNote;
-        }
 
-        $this->data['noteUser'] = $noteUser;
-        $this->data['moyenne'] = $moyenne;
         $this->data['recette'] = $recette;
         return $this->render('recette/index.html.twig', $this->data);
     }
@@ -143,23 +101,5 @@ class RecetteController extends AbstractController
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
-    }
-
-    /**
-     * Temps recette en minute
-     *
-     * @param string $temps
-     * @return temps recette en minutes
-     */
-    private function formatTempsMn(string $temps): ?string
-    {
-        $arrayTemps = explode(":", $temps);
-        if ($arrayTemps[0] == '00') {
-            $retour = $arrayTemps[1];
-        } else {
-            $retour = $arrayTemps[0] * 60 + $arrayTemps[1];
-        }
-
-        return $retour;
     }
 }

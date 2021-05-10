@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Repository\ProduitsRepository;
 use App\Repository\RecettesRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\IngredientsRecettesRepository;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -17,7 +19,7 @@ class HomeController extends AbstractController
      */
 
     //#[Route('/', name: 'home')]
-    public function index(SerializerInterface $serializer, RecettesRepository $repo): Response
+    public function index(SerializerInterface $serializer, RecettesRepository $repo, IngredientsRecettesRepository $repo2, ProduitsRepository $repo3): Response
     {
 
         $this->data['btnMenu'] = ['hover:text-noir text-cyanclair', 'text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair'];
@@ -25,30 +27,18 @@ class HomeController extends AbstractController
 
         $recettes = $repo->findBy(['etatRecettes' => 'a']);
 
+        //Ajout produits dans la recette
+        foreach ($recettes as $recette) {
+            $ingredents = $repo2->findByidRecettes($recette->getId());
+            foreach ($ingredents  as $ingredient) {
+                $produit = $repo3->find($ingredient->getIdProduits());
+                $recette->addIdProduitsRecette($produit->getNomProduits());
+            }
+        }
         //créer le json
         $this->data['jsonContent'] = $serializer->serialize($recettes, 'json', ['groups' => 'json_recette']);
-        //return $this->json($recettes, 200, ['groups' => 'json_recette']);
         $this->data['recettes'] = $recettes;
 
         return $this->render('home/index.html.twig', $this->data);
-    }
-
-
-    /**
-     * Temps recette en minute
-     *
-     * @param string $temps
-     * @return temps recette en minutes
-     */
-    private function formatTempsMn(string $temps): ?string
-    {
-        $arrayTemps = explode(":", $temps);
-        if ($arrayTemps[0] == '00') {
-            $retour = $arrayTemps[1];
-        } else {
-            $retour = $arrayTemps[0] * 60 + $arrayTemps[1];
-        }
-
-        return $retour;
     }
 }
