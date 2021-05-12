@@ -13,6 +13,7 @@ gomme.addEventListener('click', function(){
     event.preventDefault();
     if(recherche.value == ''){
         gomme.classList.add('hidden');
+        document.location.reload();
     }else{
         gomme.classList.remove('hidden');
     }

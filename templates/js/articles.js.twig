@@ -1,0 +1,44 @@
+
+<script>
+
+
+var paniers = document.querySelectorAll('.panier');
+
+class Article {
+    constructor(id, qty, image) {
+        this.id = id;
+        this.qty = qty;
+        this.image = image;
+    }
+}
+
+localStorage.clear();
+paniers.forEach(panier => {
+    panier.addEventListener('click', function() {
+        let id = this.dataset.id;
+        let qty = document.querySelector('#artId'+ id).value;
+        let image = this.dataset.image;
+        var articleObj = new Article(id, qty, image);
+        
+        if(localStorage.getItem('paniers')){
+            var articleLocal= JSON.parse(localStorage.getItem('paniers'));
+            articleLocal.forEach((article) => {
+                if(articleObj.id == article.id){
+                    article.qty = qty
+                }else{
+                    articleLocal.push(articleObj);
+                }
+            });
+            localStorage.removeItem('paniers');
+            localStorage.setItem("paniers",JSON.stringify(articleLocal));
+        }else{
+            var articleLocal = [];
+            articleLocal.push(articleObj);
+            localStorage.setItem("paniers",JSON.stringify(articleLocal));
+        }
+        console.log(localStorage.getItem('paniers'));
+    });
+    
+});
+
+</script>

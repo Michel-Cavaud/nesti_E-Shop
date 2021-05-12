@@ -81,12 +81,18 @@ class Utilisateurs implements UserInterface
      */
     private $donneUneNotes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commandes::class, mappedBy="idUtilisateurs")
+     */
+    private $commandes;
+
 
 
     public function __construct()
     {
         $this->commentaires = new ArrayCollection();
         $this->donneUneNotes = new ArrayCollection();
+        $this->commandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -285,5 +291,35 @@ class Utilisateurs implements UserInterface
     public function getRoles()
     {
         return ['ROLE_USER'];
+    }
+
+    /**
+     * @return Collection|Commandes[]
+     */
+    public function getCommandes(): Collection
+    {
+        return $this->commandes;
+    }
+
+    public function addCommande(Commandes $commande): self
+    {
+        if (!$this->commandes->contains($commande)) {
+            $this->commandes[] = $commande;
+            $commande->setIdUtilisateurs($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommande(Commandes $commande): self
+    {
+        if ($this->commandes->removeElement($commande)) {
+            // set the owning side to null (unless already changed)
+            if ($commande->getIdUtilisateurs() === $this) {
+                $commande->setIdUtilisateurs(null);
+            }
+        }
+
+        return $this;
     }
 }
