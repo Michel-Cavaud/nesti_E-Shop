@@ -3,51 +3,66 @@
 
 
 {% block body %}
-
-<div class="container-fluid mx-auto px-4 md:px-12">
-    <div class="grid grid-cols-2 md:grid-cols-4 mx-1 lg:mx-4 gap-10">
-        {% for article in articles %}
-            <article class="overflow-hidden  h-full rounded-lg shadow-md hover:shadow-xl">
-                <a href="">
-                    <div class="aspect-w-3 aspect-h-2">
-                        <img class="object-cover" src="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}">
+<div class="relative flex w-80 flex-wrap items-stretch mb-3 ml-20">
+  <input type="text" id="recherche" placeholder="Recherche article" class="px-3 py-3 placeholder-cyanclair text-cyanfonce relative
+   bg-white rounded text-lg border border-cyanclair outline-none focus:outline-none focus:ring w-full pr-20"/>
+  <span class="z-10 h-full leading-snug font-normal absolute text-center text-cyanfonce absolute bg-transparent
+   rounded text-3xl items-center justify-center w-8 right-10 pr-3 py-2">
+   <i class="gomme hidden fas fa-eraser"></i>
+  </span>
+  <span class="z-10 h-full leading-snug font-normal absolute text-center text-cyanfonce absolute bg-transparent
+   rounded text-3xl items-center justify-center w-8 right-0 pr-3 py-2">
+   <i class="fas fa-search"></i>
+  </span>
+</div>
+<div class="affichageArticles">
+    <div class="container-fluid mx-auto px-4 md:px-12">
+        <div class="grid grid-cols-2 md:grid-cols-5 mx-1 lg:mx-4 gap-10">
+            {% for article in articles %}
+                <article class="overflow-hidden flex flex-col justify-between h-full rounded-lg shadow-md hover:shadow-xl">
+                    <a href="">
+                        <div class="aspect-w-3 aspect-h-2">
+                            <img class="object-cover" src="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}">
+                        </div>
+                        <div class="grid grid-cols-2  font-croissant text-cyanfonce font-extrabold text-lg my-4">
+                            <div class="ml-2">{{ article.nomUsageArticles}}</div>
+                            <div class="place-self-end mr-2">{{ article.prixArticle.prixPrixArticle}} €</div>
+                        </div>
+                    </a>
+                    <div>
+                        {% if article.stock < 1 %}
+                            <div class="text-center  font-croissant text-xs lg:text-sm">Article en rupture de stock</div>
+                        {% else %}
+                            <div class="text-center fonct-croissant">&nbsp;</div>
+                        {% endif %}
                     </div>
-                    <div class="grid grid-cols-2  font-croissant text-cyanfonce font-extrabold text-lg my-4">
-                        <div class="ml-2">{{ article.nomUsageArticles}}</div>
-                        <div class="place-self-end mr-2">{{ article.prixArticle.prixPrixArticle}} €</div>
-                    </div>
-                </a>
-                <div>
-                    {% if article.stock < 1 %}
-                        <div class="text-center  font-croissant text-xs lg:text-sm">Article en rupture de stock</div>
-                    {% else %}
-                        <div class="text-center fonct-croissant">&nbsp;</div>
-                    {% endif %}
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 text-center font-croissant my-4 content-center "> 
-                    <div class="lg:text-right ml-1 self-center">
-                        <label for="quantity">Quantité&nbsp;:&nbsp;</label>   
-                    </div>
-                    
-                    <div class="self-center">
-                        <input class="ml-2 pl-1 text-center appearance-none block w-full border-gray-200 rounded leading-tight focus:outline-none 
-                        focus:ring-1 focus:ring-blue-500 focus:border-blue-500 {% if article.stock < 1 %} disabled:opacity-50 {% endif %}"
-                            {% if article.stock < 1 %} disabled {% endif %}
-                            id="artId{{ article.id }}" name="quantity" type="number" value="{% if article.stock > 0 %}1{% endif %}" min="1" max="{{ article.stock }}">
-                    </div>
-                    <div class="text-2xl  mr-4 ">
-                        <div class="text-blanc hover:text-cyanclair">
-                            <i data-id="{{ article.id}}"
-                            data-image="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}"
-                             class="fas fa-shopping-cart {% if article.stock < 1 %} 
-                            opacity-50 {% else %} panier  cursor-pointer {% endif %}"></i>
+                    <div class="flex flex-col  xl:flex-row justify-around text-center font-croissant my-4 content-center "> 
+                        <div class="self-center">
+                            <label for="quantity">Quantité&nbsp;:&nbsp;</label>   
+                        </div>
+                        
+                        <div class="self-center">
+                            <input class="pl-1 quantity text-center appearance-none block w-full border-gray-200 rounded leading-tight focus:outline-none 
+                            focus:ring-1 focus:ring-blue-500 focus:border-blue-500 {% if article.stock < 1 %} disabled:opacity-50 {% endif %}"
+                                {% if article.stock < 1 %} disabled {% endif %}
+                                id="artId{{ article.id }}" name="quantity" type="number" value="{% if article.stock > 0 %}0{% endif %}" min="0" max="{{ article.stock }}">
+                        </div>
+                        <div class="text-2xl self-center">
+                            <div class="text-blanc hover:text-cyanclair">
+                                <i data-id="{{ article.id}}"
+                                data-nom="{{  article.nomUsageArticles }}"
+                                data-prix="{{article.prixArticle.prixPrixArticle}}"
+                                data-stock="{{ article.stock }}"
+                                data-image="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}"
+                                class="fas fa-cart-plus {% if article.stock < 1 %} 
+                                opacity-50 {% else %} panier  cursor-pointer {% endif %}"></i>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </article>  
-        {% endfor %}
-    </div>
-     
+                </article>  
+            {% endfor %}
+        </div>
+    </div>    
 </div>
 
 {% endblock %}

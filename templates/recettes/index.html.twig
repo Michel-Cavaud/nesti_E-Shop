@@ -28,11 +28,11 @@
                               <div class="aspect-w-1 aspect-h-1">
                                    <img src="{{LIEN_IMAGES_RECETTES}}{{recette.images.nomImages}}.{{recette.images.extensionImages}}">
                               </div>
-                              <div>Chef : {{recette.idChef.prenomUtilisateurs }} {{recette.idChef.nomUtilisateurs }}</div>
+                              <div class="ml-2">Chef : {{recette.idChef.prenomUtilisateurs }} {{recette.idChef.nomUtilisateurs }}</div>
                               {% if recette.donneUneNotes.note.moyenne != 0 %}
-                                   <div class="text-right">Note : {{recette.donneUneNotes.note.moyenne |round(1, 'floor')}}/5</div>
+                                   <div class="text-right mr-2">Note : {{recette.donneUneNotes.note.moyenne |round(1, 'floor')}}/5</div>
                               {%else%}
-                                   <div class="text-right">&oslash;<div>
+                                   <div class="text-right mr-2">&oslash;<div>
                               {% endif %}
                              
                               <h1 class="text-sm lg:text-xl text-center font-croissant m-auto h-20 md:h-20">

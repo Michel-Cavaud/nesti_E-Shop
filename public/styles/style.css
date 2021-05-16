@@ -103,7 +103,7 @@ li {
     background-size: contain;
 }
 
-  .modal {
+  .modal, .modalCommentaire, .modalPanier {
     transition: opacity 0.25s ease;
   }
   body.modal-active {

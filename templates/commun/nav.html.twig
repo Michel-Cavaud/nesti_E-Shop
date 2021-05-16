@@ -13,8 +13,15 @@
 
 
      <div class="hidden md:grid toggle grid-cols-1 md:grid-cols-5 auto-cols-fr w-full gap-4 my-5">
-          <div class=" text-4xl md:text-center self-center"><a href="" class="text-blanc hover:text-cyanclair"><i
-                         class="fas fa-shopping-cart"></i></a></div>
+          <div class="md:text-center self-center">
+               <div class="cursor-pointer text-blanc hover:text-cyanclair panierNav">
+                    <span class="fa-stack">
+                         <span class="fas fa-shopping-cart text-4xl "></span>
+                         <span class="fa-stack-1x text-noir text-lg font-croissant textPanier">  </span>
+                    </span>
+               </div>
+          </div>
+          
           <div class="md:text-center">
                <a href="{{path('home')}}" class="">
                     <button

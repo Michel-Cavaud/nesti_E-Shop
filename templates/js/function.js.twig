@@ -209,13 +209,160 @@ function toggleModal () {
     password.value = '';
 }
 
-//affichage u pas du modal de commentaire
+//affichage ou pas du modal de commentaire
 function toggleModalCommentaire () {
     const body = document.querySelector('body');
     const modalCommentaire = document.querySelector('.modalCommentaire');
     modalCommentaire.classList.toggle('hidden');
     modalCommentaire.classList.toggle('pointer-events-none');
     body.classList.toggle('modal-active');
+    
+}
+
+//affichage éléments panier
+var total;
+var nbArticle;
+function completPanier(){
+    let bodyPanier =  document.querySelector('.bodyPanier');
+    if(localStorage.getItem('paniers')){
+        let articleLocal = JSON.parse(localStorage.getItem('paniers'));
+        total = 0;
+        nbArticle = 0;
+        let html = '<div class="flex flex-wrap -mx-1 overflow-hidden sm:-mx-px md:-mx-px lg:-mx-px xl:-mx-px text-xs md:text-base text-center ">';
+        articleLocal.forEach(article => {
+            html += '<div class="my-1 px-1 w-1/3 overflow-hidden sm:my-px sm:px-px sm:w-1/3 md:my-px md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html += '<div class="aspect-w-3 aspect-h-2 mr-2"><img class="object-cover" src="' + article.image + '">';
+            html += '</div></div>';
+
+            html += '<div class=" self-center my-1 px-1 w-1/3 overflow-hidden sm:my-px sm:px-px sm:w-1/3 md:my-px md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html += '<div class="font-croissant text-cyanfonce ml-2 ">' + article.nom + '</div>';
+            html += '</div>';
+
+            html += '<div class="self-center my-1 px-1 w-1/3 overflow-hidden sm:my-px sm:px-px sm:w-1/3 md:my-px md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html += '<div class="flex ">';
+            html += '<div class="ml-2 w-1/2 text-right self-center">Qte&nbsp:&nbsp;' + article.qty + '</div>';
+            html +=  '<div class="flex flex-col w-1/2 self-center text-left bg-grey-lighter">'
+            html +=  '<button data-id="' + article.id + '" class="btnPlus mx-4 bg-cyanclair text-white active:bg-cyanclair font-bold uppercase text-xs rounded shadow hover:bg-cyanfonce hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150" type="button" ><i class="fas fa-plus"></i></button>';
+            html +=  '<button data-id="' + article.id + '" class="btnMoins mx-4 py-0.4 bg-cyanclair text-white active:bg-cyanclair font-bold uppercase text-xs rounded hover:bg-cyanfonce shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150" type="button" ><i class="fas fa-minus"></i></button>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+
+            html += '<div class="self-center mb-4 px-1 w-1/3 overflow-hidden sm:mb-8sm:px-px sm:w-1/3 md:mb-8 md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html += '<div class="ml-2">Prix&nbsp:&nbsp;' + article.prix + '€</div>';    
+            html += '</div>';
+
+            html += '<div class="self-center mb-4 px-1 w-1/3 overflow-hidden sm:mb-8 sm:px-px sm:w-1/3 md:mb-8 md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html += '<div class="ml-2 font-bold">Total&nbsp:&nbsp;' + (article.prix * article.qty).toFixed(2) + '€</div>'; 
+            html += '</div>';
+
+            html += '<div class="self-center mb-4 px-1 w-1/3 overflow-hidden sm:mb-8 sm:px-px sm:w-1/3 md:mb-8 md:px-px md:w-1/3 lg:mb-8 lg:px-px lg:w-1/6 xl:mb-8 xl:px-px xl:w-1/6">';
+            html +=  '<span  data-id="' + article.id + '" class="btnCorbeille cursor-pointer"><i class="fas fa-trash fa-2x"></i></span>';
+          
+            html += '</div>';
+            total += article.prix * article.qty ;
+            nbArticle = nbArticle + parseInt(article.qty, 10);
+        });
+        html += '</div>';
+        html += '<div class="font-croissant text-2xl font-extrabold text-right" >Total&nbsp:&nbsp;' + total.toFixed(2) + '€</div> ';
+        bodyPanier.innerHTML = html;
+
+        btnPlus = document.querySelectorAll('.btnPlus');
+        btnPlus.forEach(btn => {    
+            btn.addEventListener("click",function () {
+                id = this.dataset.id;
+                changeQte(id, "plus");
+            });          
+        });
+        btnMoins = document.querySelectorAll('.btnMoins');
+        btnMoins.forEach(btn => {    
+            btn.addEventListener("click",function () {
+                id = this.dataset.id;
+                changeQte(id, "moins");
+            });          
+        });
+        btnCorbeille = document.querySelectorAll('.btnCorbeille');
+        btnCorbeille.forEach(btn => {    
+            btn.addEventListener("click",function () {
+                id = this.dataset.id;
+                changeQte(id, "sup");
+            });          
+        });
+    }
+}
+
+function majInputPanier(){
+    quantity = document.querySelectorAll('.quantity');
+    quantity.forEach(element => {
+        element.value = 0 ;
+    });
+    if(localStorage.getItem('paniers')){
+        let articleLocal= JSON.parse(localStorage.getItem('paniers'));
+        articleLocal.forEach((article, index, object) => {
+            let input = document.querySelector('#artId' + article.id);
+            if(input != null){
+               input.value = article.qty;  
+            }
+            
+        });
+    }
+}
+
+
+function changeQte(id, action){
+    if(localStorage.getItem('paniers')){
+        let articleLocal = JSON.parse(localStorage.getItem('paniers'));
+        articleLocal.forEach((article, index, object) => {
+            if (article.id == id){
+                switch (action){
+                    case 'plus':
+                        if(article.qty == article.stock){
+                            textToast.textContent = "Maximum d'article disponible en stock !" ;
+                            fondTost.classList.add('bg-rouge');
+                            tost.classList.toggle('hidden');
+                            tost.classList.toggle('alert-toast');
+                            setTimeout(fermerTost, 4000, 'bg-rouge');
+                        }else{
+                            article.qty = parseInt(article.qty, 10) + 1;
+                        }
+                        
+                    break;
+                    case 'moins':
+                        if (article.qty >1){
+                            article.qty = parseInt(article.qty, 10) - 1;  
+                        }
+                    break;
+                    case 'sup':
+                        object.splice(index, 1);
+                    break;
+                }
+                //articleLocal.length =  articleLocal.length;
+            }
+        });
+        localStorage.removeItem('paniers');
+        if(articleLocal.length > 0){
+            localStorage.setItem("paniers",JSON.stringify(articleLocal));
+        }else{
+            toggleModalPanier();
+        }
+        gestionPanier();
+        completPanier();
+        majInputPanier();
+    }
+}
+
+//affichage ou pas du modal panier
+function toggleModalPanier () {
+    const body = document.querySelector('body');
+    const modalPanier = document.querySelector('.modalPanier');
+    modalPanier.classList.toggle('hidden');
+   
+    modalPanier.classList.toggle('pointer-events-none');
+    console.log('ok');
+    body.classList.toggle('modal-active');
+    if(!modalPanier.classList.contains('hidden')){
+        completPanier();
+    }
 }
 
 //fermeture du tost
@@ -224,4 +371,61 @@ function fermerTost(fond){
     tost.classList.toggle('alert-toast');
     fondTost.classList.remove(fond);
 }
+
+function gestionPanier(){
+    let textPanier = document.querySelector('.textPanier');
+    if(localStorage.getItem('paniers')){
+        let articleLocal= JSON.parse(localStorage.getItem('paniers'));
+        if(articleLocal.length == 0){
+            textPanier.textContent = ''; 
+        }else{
+            textPanier.textContent = articleLocal.length;
+        }
+    }else{
+        textPanier.textContent = '';
+    }
+}
+gestionPanier();
+
+function tostArticles(articleObj, texte){
+    (articleObj.qty > 1)?s='s': s='';
+    if(texte == 'ajout'){
+        textToast.textContent = articleObj.qty + ' article' + s + ' : ' + articleObj.nom + ' ajouté au panier';
+        fondTost.classList.add('bg-vert');
+        tost.classList.toggle('hidden');
+        tost.classList.toggle('alert-toast');
+        setTimeout(fermerTost, 4000, 'bg-vert');
+    }else if (texte == 'erreur'){
+        textToast.textContent = "Vous devez choisir une quantité pour l'article !" ;
+        fondTost.classList.add('bg-rouge');
+        tost.classList.toggle('hidden');
+        tost.classList.toggle('alert-toast');
+        setTimeout(fermerTost, 4000, 'bg-rouge');
+    }else if (texte == 'zero'){
+        textToast.textContent = "L'article " + articleObj.nom + ' a été supprimé du panier';
+        fondTost.classList.add('bg-vert');
+        tost.classList.toggle('hidden');
+        tost.classList.toggle('alert-toast');
+        setTimeout(fermerTost, 4000, 'bg-vert');
+    }
+}
+
+//affichage ou pas du modal mode de paiement
+function toggleModalModePaiement() {
+    const body = document.querySelector('body');
+    const modalModePaiement = document.querySelector('.modalModePaiement');
+    modalModePaiement.classList.toggle('hidden');
+    modalModePaiement.classList.toggle('pointer-events-none');
+    body.classList.toggle('modal-active');
+}
+
+//affichage ou pas du modal  de paiement CB
+function toggleModalPaiement() {
+    const body = document.querySelector('body');
+    const modalPaiement = document.querySelector('.modalPaiement');
+    modalPaiement.classList.toggle('hidden');
+    modalPaiement.classList.toggle('pointer-events-none');
+    body.classList.toggle('modal-active');
+}
+
 </script>

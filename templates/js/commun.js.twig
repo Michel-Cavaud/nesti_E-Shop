@@ -1,6 +1,11 @@
  <script>
     var lienConnexion = document.querySelector('#lienConnexion');
     var connexion = document.querySelector('.connexion')
+
+    let form = document.querySelector('#formConnexion');
+    var tost = document.querySelector('.tost');
+    var fondTost = document.querySelector('.fondTost');
+    var textToast = document.querySelector('.textToast');
     
     connexion.addEventListener('click', function(event){
       event.preventDefault();
@@ -29,8 +34,6 @@
           }
         };
         run();
-        
-      
       }
     })
     
@@ -54,13 +57,9 @@
       if (isEscape && document.body.classList.contains('modal-active')) {
     	  toggleModal();
         toggleModalCommentaire();
+        toggleModalPanier();
       }
     };
-
-    let form = document.querySelector('#formConnexion');
-    var tost = document.querySelector('.tost');
-    var fondTost = document.querySelector('.fondTost');
-    var textToast = document.querySelector('.textToast');
 
     form.addEventListener('submit', async function (e) {
       event.preventDefault();
@@ -127,4 +126,145 @@
               nav.classList.remove('nav-sticky');
         }
     });
+
+    const overlayPanier = document.querySelector('.modalPanier-overlay')
+    overlayPanier.addEventListener('click', toggleModalPanier);
+    
+    var closemodalPanier = document.querySelectorAll('.modalPanier-close')
+    for (var i = 0; i < closemodalPanier.length; i++) {
+      closemodalPanier[i].addEventListener('click', toggleModalPanier)
+    }
+
+    var panierNav = document.querySelector('.panierNav');
+    panierNav.addEventListener('click', function () {
+      event.preventDefault();
+      if(localStorage.getItem('paniers')){
+          let articleLocal= JSON.parse(localStorage.getItem('paniers'));
+          if(articleLocal.length > 0){
+            toggleModalPanier();
+          }else{
+            textToast.textContent = 'Aucun élément dans votre panier ! !';
+            fondTost.classList.add('bg-rouge');
+            tost.classList.toggle('hidden');
+            tost.classList.toggle('alert-toast');
+            setTimeout(fermerTost, 4000, 'bg-rouge');
+        }
+      }else{
+          textToast.textContent = 'Aucun élément dans votre panier ! !';
+          fondTost.classList.add('bg-rouge');
+          tost.classList.toggle('hidden');
+          tost.classList.toggle('alert-toast');
+          setTimeout(fermerTost, 4000, 'bg-rouge');
+      }
+    });
+
+    viderPanier = document.querySelector('.viderPanier');
+    viderPanier.addEventListener('click', function () {
+      event.preventDefault();
+      localStorage.removeItem('paniers');
+      
+      toggleModalPanier();
+      gestionPanier();
+      lesPaniers();
+      majInputPanier();
+      textToast.textContent = 'Votre panier est vide !';
+      fondTost.classList.add('bg-vert');
+      tost.classList.toggle('hidden');
+      tost.classList.toggle('alert-toast');
+      setTimeout(fermerTost, 4000, 'bg-vert');
+
+    });
+
+    const overlayModePaiement = document.querySelector('.modalModePaiement-overlay')
+    overlayModePaiement.addEventListener('click', toggleModalModePaiement)
+    
+    var closemodalModePaiement = document.querySelectorAll('.modalModePaiement-close')
+    for (var i = 0; i < closemodalModePaiement.length; i++) {
+      closemodalModePaiement[i].addEventListener('click', toggleModalModePaiement)
+    }
+
+    var paiement = document.querySelector('.paiement');
+    paiement.addEventListener('click', async function (e) {
+      event.preventDefault();
+      let response = await fetch('{{ path('security_getuserpaiement') }}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        }
+      });
+      let responseData = await response.json();
+      if (response.ok === true & responseData.success) {
+        if(responseData.user == null){
+          toggleModal();
+        }else{
+          let valeurPanier = document.querySelector('.valeurPanier');
+          let html = '<div class="mt-5 text-2xl font-croissant text-center">Nombre de produit : ' + nbArticle + ' pour un total de : ' + total + '€</div>';
+          valeurPanier.innerHTML = html;
+          toggleModalModePaiement();
+          
+        }
+      }
+    });
+
+    let bitcoin = document.querySelector('.bitcoin');
+    bitcoin.addEventListener('click', function () {
+      event.preventDefault();
+      textToast.textContent = 'Mode de paiement non disponible !';
+      fondTost.classList.add('bg-vert');
+      tost.classList.toggle('hidden');
+      tost.classList.toggle('alert-toast');
+      setTimeout(fermerTost, 4000, 'bg-vert');
+
+    });
+    let paypal = document.querySelector('.paypal');
+    paypal.addEventListener('click', function () {
+      event.preventDefault();
+      textToast.textContent = 'Mode de paiement non disponible !';
+      fondTost.classList.add('bg-vert');
+      tost.classList.toggle('hidden');
+      tost.classList.toggle('alert-toast');
+      setTimeout(fermerTost, 4000, 'bg-vert');
+
+    });
+
+    const overlayPaiement = document.querySelector('.modalPaiement-overlay')
+    overlayPaiement.addEventListener('click', toggleModalPaiement)
+    
+    var closemodalPaiement = document.querySelectorAll('.modalPaiement-close')
+    for (var i = 0; i < closemodalPaiement.length; i++) {
+      closemodalPaiement[i].addEventListener('click', toggleModalPaiement)
+    }
+
+    let cartebleue = document.querySelector('.cartebleue');
+    cartebleue.addEventListener('click', async function (e) {
+      event.preventDefault();
+      let infoPanier = document.querySelector('.infoPanier');
+      infoPanier.innerHTML = '<div class="mt-5 text-2xl font-croissant text-center">Nombre de produit : ' + nbArticle + ' pour un total de : ' + total + '€</div>';
+      let response = await fetch('{{ path('security_getuserpaiement') }}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        }
+      });
+      let responseData = await response.json();
+      if (response.ok === true & responseData.success) {
+        if(responseData.user == null){
+          toggleModal();
+        }else{
+          let infoUser = document.querySelector('.infoUser');
+          let html = '<div>' + responseData.civilite + ' ' + responseData.prenom + ' ' + responseData.nom +'</div>';
+          html += '<div>' + responseData.adresse1 +'</div>';
+          html += '<div>' + responseData.adresse2 +'</div>';
+          html += '<div>' + responseData.codepostal + ' ' + responseData.ville + '</div>';
+          html += '<div class="mt-2">' + responseData.email + '</div>';
+
+          infoUser.innerHTML = html;
+          toggleModalPaiement();
+        }
+      }
+
+
+      
+    });
+
   </script>

@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UtilisateursRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -17,6 +18,7 @@ class Utilisateurs implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      *@ORM\Column(name="id_utilisateurs", type="integer", nullable=false)
+     * @Groups({"json_user"})
      */
     private $id;
 
@@ -28,16 +30,19 @@ class Utilisateurs implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"json_user"})
      */
     private $nomUtilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"json_user"})
      */
     private $prenomUtilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"json_user"})
      */
     private $emailUtilisateurs;
 
@@ -58,16 +63,19 @@ class Utilisateurs implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"json_user"})
      */
     private $adresse1Utilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"json_user"})
      */
     private $adresse2Utilisateurs;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"json_user"})
      */
     private $codePostalUtilisateurs;
 
@@ -85,6 +93,20 @@ class Utilisateurs implements UserInterface
      * @ORM\OneToMany(targetEntity=Commandes::class, mappedBy="idUtilisateurs")
      */
     private $commandes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Ville::class)
+     *  @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_ville", referencedColumnName="id_ville")
+     * })
+     * @Groups({"json_user"})
+     */
+    private $idVille;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $civiliteUtilisateurs;
 
 
 
@@ -319,6 +341,30 @@ class Utilisateurs implements UserInterface
                 $commande->setIdUtilisateurs(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdVille(): ?Ville
+    {
+        return $this->idVille;
+    }
+
+    public function setIdVille(?Ville $idVille): self
+    {
+        $this->idVille = $idVille;
+
+        return $this;
+    }
+
+    public function getCiviliteUtilisateurs(): ?string
+    {
+        return $this->civiliteUtilisateurs;
+    }
+
+    public function setCiviliteUtilisateurs(string $civiliteUtilisateurs): self
+    {
+        $this->civiliteUtilisateurs = $civiliteUtilisateurs;
 
         return $this;
     }

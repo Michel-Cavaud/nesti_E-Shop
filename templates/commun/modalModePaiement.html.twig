@@ -1,0 +1,40 @@
+
+<div class="modalModePaiement hidden pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center z-40">
+
+    <div class="modalModePaiement-overlay absolute w-full h-full bg-noir opacity-10"></div>
+    
+    <div class="modal-container bg-white w-11/12 z-40 overflow-y-auto  rounded shadow-lg">
+  
+    
+        <div class="modal-content bg-blanc container mx-auto h-auto text-left  w-full md:w-4/5  mt-32 p-4">
+        <!--Title-->
+            <div class="flex justify-between items-center pb-3">
+                <p class="text-2xl font-bold text-cyanfonce text-center">Choisissez le mode de paiement de votre commande</p>
+                <div class="modalModePaiement-close cursor-pointer z-40">
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                    <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="valeurPanier"></div>
+
+            <div class="flex flex-wrap -mx-6 overflow-hidden sm:-mx-1 lg:-mx-6 xl:-mx-6 mt-5">
+
+                <div class="self-center cursor-pointer paypal my-6 px-6 w-1/3 overflow-hidden sm:my-1 sm:px-1 sm:w-full md:w-1/3 lg:my-6 lg:px-6 lg:w-1/3 xl:my-6 xl:px-6 xl:w-1/3">
+                    <img src="{{asset('images/icone-paypal.png')}}">
+                </div>
+
+                <div class="self-center cartebleue  cursor-pointer my-6 px-6 w-1/3 overflow-hidden sm:my-1 sm:px-1 sm:w-full md:w-1/3 lg:my-6 lg:px-6 lg:w-1/3 xl:my-6 xl:px-6 xl:w-1/3">
+                    <img src="{{asset('images/Logo_CB.png')}}">
+                </div>
+
+                <div class="self-center bitcoin  cursor-pointer my-6 px-6 w-1/3 overflow-hidden sm:my-1 sm:px-1 sm:w-full md:w-1/3 lg:my-6 lg:px-6 lg:w-1/3 xl:my-6 xl:px-6 xl:w-1/3">
+                    <img src="{{asset('images/bitcoin.jpg')}}">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+  

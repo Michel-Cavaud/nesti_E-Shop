@@ -15,13 +15,16 @@
 
 </head>
 
-<body>
+<body class="flex flex-col min-h-screen ">
     <header>
         {{ include('/commun/nav.html.twig') }}
        
     </header>
-    <main>
+    <main class="flex-grow">
      {{ include('/commun/modalLogin.html.twig') }}
+     {{ include('/commun/modalPanier.html.twig') }}
+     {{ include('/commun/modalModePaiement.html.twig') }}
+     {{ include('/commun/modalPaiement.html.twig') }}
      {{ include('/commun/tost.html.twig') }}
         {% block body %}{% endblock %}
     </main>

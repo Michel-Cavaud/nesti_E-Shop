@@ -47,4 +47,15 @@ class ArticlesRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function rechercheArticles($mot)
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.etatArticles = :a')
+            ->andWhere('r.nomUsageArticles LIKE :recherche')
+            ->setParameter('recherche', '%' . $mot . '%')
+            ->setParameter('a', 'a')
+            ->getQuery()
+            ->execute();
+    }
 }

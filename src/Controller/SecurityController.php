@@ -6,6 +6,7 @@ use App\Repository\CommentairesRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SecurityController extends AbstractController
@@ -38,6 +39,31 @@ class SecurityController extends AbstractController
                 $array = array('success' => true, 'user' => $user);
             }
         }
+
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    #[Route('/getuserPaiement', name: 'security_getuserpaiement', methods: ['POST'])]
+    public function userPaiement()
+    {
+        $user = $this->getUser();
+        if ($user == null) {
+            $array = array(
+                'success' => true, 'user' => $user
+            );
+        } else {
+            $array = array(
+                'success' => true, 'user' => $user, 'civilite' => $user->getCiviliteUtilisateurs(), 'nom' => $user->getNomUtilisateurs(), 'prenom' => $user->getPrenomUtilisateurs(),
+                'email' => $user->getEmailUtilisateurs(), 'adresse1' => $user->getAdresse1Utilisateurs(),
+                'adresse2' => $user->getAdresse2Utilisateurs(), 'codepostal' => $user->getCodePostalUtilisateurs(),
+                'ville' => $user->getidVille()->getNomVille()
+            );
+        }
+
+
 
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');
