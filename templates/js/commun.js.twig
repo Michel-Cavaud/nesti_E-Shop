@@ -13,9 +13,17 @@
         toggleModal();
       }else{
         if(document.body.classList.contains('modal-active')){
-          toggleModalCommentaire();
+          if(document.querySelector('.modalPaiement') != null){
+            toggleModalPaiement();
+          }
+          if(document.querySelector('.modalModePaiement') != null){
+            toggleModalModePaiement();
+          }
+          if(document.querySelector('.modalCommentaire') != null){
+            toggleModalCommentaire();
+          }
         }
-        
+         
         async function run() {
           const response = await fetch('{{ path('security_logout') }}', {
             method: 'POST',
@@ -262,9 +270,95 @@
           toggleModalPaiement();
         }
       }
-
-
-      
     });
 
+    let paiementCB = document.querySelector('.paiementCB');
+    paiementCB.addEventListener('click', async function (e) {
+      event.preventDefault();
+      let response = await fetch('{{ path('security_getuserpaiement') }}', {
+        method: 'POST',
+        headers: {
+          'X-Requested-With': 'xmlhttprequest'
+        }
+      });
+      let responseData = await response.json();
+      if (response.ok === true & responseData.success) {
+        if(responseData.user == null){
+          toggleModal();
+        }else{
+          
+          let typeCarte = document.querySelector('#typeCarte').value;
+
+          let flag = false;
+          let nom = document.querySelector('#nom');
+          nom.classList.add('border-gray-200');
+          nom.classList.remove('border-rouge');
+          if(nom.value == ""){
+            nom.classList.remove('border-gray-200');
+            nom.classList.add('border-rouge');
+            flag = true;
+          }
+
+          let numero = document.querySelector('#numero');
+          numero.classList.add('border-gray-200');
+          numero.classList.remove('border-rouge');
+          if(numero.value == ''){
+            numero.classList.remove('border-gray-200');
+            numero.classList.add('border-rouge');
+            flag = true;
+          }
+
+          let numeroSecurite =  document.querySelector('#numeroSecurite');
+          numeroSecurite.classList.add('border-gray-200');
+          numeroSecurite.classList.remove('border-rouge');
+          if(numeroSecurite.value == '' | !(/^[0-9]{3}$/.test(numeroSecurite.value))){
+            numeroSecurite.classList.remove('border-gray-200');
+            numeroSecurite.classList.add('border-rouge');
+            flag = true;
+          }
+          
+          if(flag){
+            tostPaiement();
+          }else{
+            if(!checkCreditCard (numero.value, typeCarte)){
+              textToast.textContent = ccErrors[ccErrorNo] ;
+              fondTost.classList.add('bg-rouge');
+              tost.classList.toggle('hidden');
+              tost.classList.toggle('alert-toast');
+              setTimeout(fermerTost, 4000, 'bg-rouge');
+            }else{
+              let response = await fetch('{{ path('security_validcommande') }}', {
+                method: 'POST',
+                headers: {
+                  'X-Requested-With': 'xmlhttprequest'
+                },
+                body : localStorage.getItem('paniers')
+              });
+              let responseData = await response.json();
+              if (response.ok === true & responseData.success) {
+                  localStorage.removeItem('paniers');
+      
+                  toggleModalPanier();
+                  toggleModalPaiement();
+                  toggleModalModePaiement();
+                  gestionPanier();
+                  lesPaniers();
+                  majInputPanier();
+                  textToast.textContent = 'Votre commande est validée !';
+                  fondTost.classList.add('bg-vert');
+                  tost.classList.toggle('hidden');
+                  tost.classList.toggle('alert-toast');
+                  setTimeout(fermerTost, 3000, 'bg-vert');
+                  setTimeout(reload, 4000);
+
+              }
+            }
+          }
+        }
+      }
+
+    }); 
+    function reload(){
+      document.location.reload();
+    }
   </script>

@@ -30,7 +30,7 @@ class Commandes
     private $dateCreationCommandes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Utilisateurs::class, inversedBy="commandes")
+     * @ORM\ManyToOne(targetEntity=Utilisateurs::class, inversedBy="commandes", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_utilisateurs", referencedColumnName="id_utilisateurs")
      * })

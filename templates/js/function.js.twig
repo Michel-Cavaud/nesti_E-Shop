@@ -1,4 +1,15 @@
 <script>
+class Article {
+    constructor(id, qty, image, nom, prix, stock) {
+        this.id = id;
+        this.qty = qty;
+        this.image = image;
+        this.nom = nom;
+        this.prix = prix;
+        this.stock = stock;
+    }
+}
+
 //Créer un tableau des ingrédients validés par l'user
 function countCard() {
     let arrayCardValid = [];
@@ -410,6 +421,14 @@ function tostArticles(articleObj, texte){
     }
 }
 
+function tostPaiement(){
+    textToast.textContent = "Corrigez les erreurs de saisie" ;
+    fondTost.classList.add('bg-rouge');
+    tost.classList.toggle('hidden');
+    tost.classList.toggle('alert-toast');
+    setTimeout(fermerTost, 4000, 'bg-rouge');
+}
+
 //affichage ou pas du modal mode de paiement
 function toggleModalModePaiement() {
     const body = document.querySelector('body');
@@ -426,6 +445,63 @@ function toggleModalPaiement() {
     modalPaiement.classList.toggle('hidden');
     modalPaiement.classList.toggle('pointer-events-none');
     body.classList.toggle('modal-active');
+}
+
+//localStorage.clear();
+function lesPaniers(){
+    var paniers = document.querySelectorAll('.panier');
+    paniers.forEach(panier => {
+        panier.addEventListener('click', function() {
+            let id = this.dataset.id;
+            let qty = document.querySelector('#artId'+ id).value;
+            let image = this.dataset.image;
+            let nom = this.dataset.nom;
+            let prix = this.dataset.prix;
+            let stock = this.dataset.stock;
+            var articleObj = new Article(id, qty, image, nom, prix, stock);
+            
+            if(localStorage.getItem('paniers')){
+                let articleLocal= JSON.parse(localStorage.getItem('paniers'));
+                let flag = true;
+                articleLocal.forEach((article, index, object) => {
+                    if (articleObj.qty == 0 & articleObj.id == article.id){
+                        object.splice(index, 1);
+                        tostArticles(articleObj, 'zero');
+                        flag = false;
+                    }else{
+                        if(articleObj.id == article.id){
+                            article.qty = qty;
+                            tostArticles(articleObj, 'ajout');
+                            flag = false;
+                        }
+                    }
+                });
+                if(flag){
+                    if(articleObj.qty == 0){
+                        tostArticles(articleObj, 'erreur');
+                    }else{
+                        articleLocal.push(articleObj);
+                        tostArticles(articleObj, 'ajout');  
+                    }
+                }
+                localStorage.removeItem('paniers');
+                localStorage.setItem("paniers",JSON.stringify(articleLocal));
+                gestionPanier();
+            }else{
+                if(articleObj.qty == 0){
+                    tostArticles(articleObj, 'erreur');
+                }else{
+                    var articleLocal = [];
+                    articleLocal.push(articleObj);
+                    tostArticles(articleObj, 'ajout');
+                    localStorage.setItem("paniers",JSON.stringify(articleLocal));
+                    gestionPanier();
+                }
+                
+            }
+            
+        });
+    });
 }
 
 </script>

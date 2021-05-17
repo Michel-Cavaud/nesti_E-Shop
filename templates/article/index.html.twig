@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+     <div class="container mx-auto px-12 mt-4">
+        <div class="flex container-fluid">
+            <div class="w-1/2">  
+                <img src="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}" alt="{{article.idImages.nomImages}}"
+                    class="shadow-lg p-2 m-4 rounded border-none w-8/12 mx-auto " /> 
+            </div>
+            <div class="w-1/2 font-croissant text-cyanfonce self-center">
+                <div class="text-3xl text-center">
+                    {{ article.nomUsageArticles}}
+                </div>
+                <div class="text-2xl text-center mt-2">
+                    {{ article.prixArticle.prixPrixArticle}} €
+                </div>
+                <div>
+                    {% if article.stock < 1 %}
+                        <div class="text-center  font-croissant text-noir text-xs lg:text-sm">Article en rupture de stock</div>
+                    {% else %}
+                        <div class="text-center fonct-croissant">&nbsp;</div>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col md:flex-row justify-around text-center font-croissant my-4 content-center "> 
+                    <div class="self-center">
+                        <label for="quantity">Quantité&nbsp;:&nbsp;</label>   
+                    </div>
+                    
+                    <div class="self-center">
+                        <input class="pl-1 quantity text-center appearance-none block w-full border-gray-200 rounded leading-tight focus:outline-none 
+                        focus:ring-1 focus:ring-blue-500 focus:border-blue-500 {% if article.stock < 1 %} disabled:opacity-50 {% endif %}"
+                            {% if article.stock < 1 %} disabled {% endif %}
+                            id="artId{{ article.id }}" name="quantity" type="number" value="{% if article.stock > 0 %}0{% endif %}" min="0" max="{{ article.stock }}">
+                    </div>
+                    <div class="text-2xl self-center">
+                        <div class="text-blanc hover:text-cyanclair">
+                            <i data-id="{{ article.id}}"
+                            data-nom="{{  article.nomUsageArticles }}"
+                            data-prix="{{article.prixArticle.prixPrixArticle}}"
+                            data-stock="{{ article.stock }}"
+                            data-image="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}"
+                            class="fas fa-cart-plus {% if article.stock < 1 %} 
+                            opacity-50 {% else %} panier  cursor-pointer {% endif %}"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if recettes|length > 0 %}
+    <div class="ml-5 mt-3 text-3xl font-croissant text-cyanfonce">Recette{% if recettes|length > 1 %}s{%endif%} avec l'article :  {{ article.idProduits.nomProduits}}</div>
+
+    <div class="container-fluid mx-auto px-4 md:px-12 mt-2">
+        <div class="grid grid-cols-2 md:grid-cols-3 mx-1 lg:mx-4">
+            {% for recette in recettes %}
+            <a href="{{path('recette',{id : recette.id})}}">
+                <div class="my-1 px-4">
+                    <article class="overflow-hidden rounded-lg shadow-md hover:shadow-xl">
+                        <div class="aspect-w-1 aspect-h-1">
+                            <img src="{{LIEN_IMAGES_RECETTES}}{{recette.images.nomImages}}.{{recette.images.extensionImages}}">
+                        </div>
+                        <div class="ml-2">Chef : {{recette.idChef.prenomUtilisateurs }} {{recette.idChef.nomUtilisateurs }}</div>
+                        {% if recette.donneUneNotes.note.moyenne != 0 %}
+                            <div class="text-right mr-2">Note : {{recette.donneUneNotes.note.moyenne |round(1, 'floor')}}/5</div>
+                        {%else%}
+                            <div class="text-right mr-2">&oslash;</div>
+                        {% endif %}
+                        
+                        <h1 class="text-sm lg:text-xl text-center font-croissant m-auto h-20 md:h-20">
+                            {{recette.nomRecettes}}      
+                        </h1>
+                        <div class="titleModal text-center grid grid-cols-2 font-croissant m-0 text-cyanfonce text-1xl xl:text-2xl mb-3 font-extrabold">
+                            <div>
+                                <img class="inline w-8 lg:w-auto" alt="temps" src="../images/temps.png"/>
+                                {{recette.tempsMn}}<span class="text-sm">mn</span>
+                            </div>
+                            <div>
+                                <img class="inline w-8 lg:w-auto" alt="personnes" src="../images/personnes.png" />
+                                {{recette.nombrePersonneRecettes}}
+                            </div>                  
+                        </div>
+                        <div class="grid grid-cols-1 text-center font-croissant text-cyanfonce text-xl mb-3 font-extrabold">
+                            <div>
+                                Difficultée : {{recette.difficulteRecettes}}
+                            </div>       
+                        </div>
+                    </article>  
+                </div>
+            </a> 
+            {% endfor %}
+        </div>
+    </div>
+
+    {%else%}
+    <div class="text-center mt-3 text-3xl font-croissant text-cyanfonce">Pas de recette avec cette article</div>
+    {%endif%}
+   
+
+{% endblock %}
+
+{% block javascripts %}
+     {{ parent() }}
+      {{ include('/js/article.js.twig') }}
+   
+
+{% endblock %}

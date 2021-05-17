@@ -2,7 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Commandes;
+use App\Entity\Utilisateurs;
+use App\Entity\LigneDeCommandes;
+use App\Repository\ArticlesRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CommentairesRepository;
+use App\Repository\UtilisateursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,6 +70,39 @@ class SecurityController extends AbstractController
         }
 
 
+
+        $response = new Response(json_encode($array));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    #[Route('/validcommande', name: 'security_validcommande', methods: ['POST'])]
+    public function validCommande(Request $request, EntityManagerInterface $em, UtilisateursRepository $repo, ArticlesRepository $repo2)
+    {
+        $paniers = $request->toArray();
+        $user = $repo->find($this->getUser()->getId());
+
+        $commande =  new Commandes;
+        $commande->setIdUtilisateurs($user);
+        $commande->setDateCreationCommandes(new \DateTime());
+        $commande->setEtatCommandes('a');
+        $em->persist($commande);
+        $em->flush();
+
+        foreach ($paniers as $panier) {
+            $ligne = new LigneDeCommandes();
+            $ligne->setidCommandes($commande);
+            $article = $repo2->find($panier['id']);
+            $ligne->setIdExterne($article);
+            $ligne->setQuantiteCommandes($panier['qty']);
+            $em->persist($ligne);
+        }
+        $em->flush();
+
+        $array = array(
+            'success' => true
+        );
 
         $response = new Response(json_encode($array));
         $response->headers->set('Content-Type', 'application/json');

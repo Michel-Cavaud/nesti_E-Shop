@@ -20,7 +20,7 @@
         <div class="grid grid-cols-2 md:grid-cols-5 mx-1 lg:mx-4 gap-10">
             {% for article in articles %}
                 <article class="overflow-hidden flex flex-col justify-between h-full rounded-lg shadow-md hover:shadow-xl">
-                    <a href="">
+                    <a href="{{ path('article', {id : article.id})}}">
                         <div class="aspect-w-3 aspect-h-2">
                             <img class="object-cover" src="{{LIEN_IMAGES_RECETTES}}{{article.idImages.nomImages}}.{{article.idImages.extensionImages}}">
                         </div>

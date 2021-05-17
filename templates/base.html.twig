@@ -17,15 +17,16 @@
 
 <body class="flex flex-col min-h-screen ">
     <header>
+        {{ include('/commun/modalLogin.html.twig') }}
+        {{ include('/commun/modalPanier.html.twig') }}
+        {{ include('/commun/modalModePaiement.html.twig') }}
+        {{ include('/commun/modalPaiement.html.twig') }}
+        {{ include('/commun/tost.html.twig') }}
         {{ include('/commun/nav.html.twig') }}
        
     </header>
     <main class="flex-grow">
-     {{ include('/commun/modalLogin.html.twig') }}
-     {{ include('/commun/modalPanier.html.twig') }}
-     {{ include('/commun/modalModePaiement.html.twig') }}
-     {{ include('/commun/modalPaiement.html.twig') }}
-     {{ include('/commun/tost.html.twig') }}
+    
         {% block body %}{% endblock %}
     </main>
     <footer>
@@ -36,6 +37,7 @@
         {{ encore_entry_script_tags('app') }}
         {{ include('/js/function.js.twig') }}
         {{ include('/js/commun.js.twig') }}
+        <script type="text/javascript" src="{{ asset('js/verifCB.js') }}"></script>
     {% endblock %}
 </body>
 
