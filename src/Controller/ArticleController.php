@@ -18,7 +18,7 @@ class ArticleController extends AbstractController
     #[Route('/article/{id<[0-9]+>}', name: 'article')]
     public function index(int $id, ArticlesRepository $repo, RecettesRepository $repo2, IngredientsRecettesRepository $repo3, ProduitsRepository $repo4): Response
     {
-        $this->data['btnMenu'] = ['text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair', 'hover:text-noir text-cyanclair'];
+        $this->data['btnMenu'] = ['text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair'];
         $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
 
         $article = $repo->find($id);

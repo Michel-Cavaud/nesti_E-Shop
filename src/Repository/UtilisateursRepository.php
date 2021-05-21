@@ -47,4 +47,15 @@ class UtilisateursRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function rechercheUser($username, $email)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username')
+            ->orWhere('u.emailUtilisateurs = :email')
+            ->setParameter('username', $username)
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->execute();
+    }
 }

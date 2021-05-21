@@ -7,10 +7,11 @@ use App\Repository\UtilisateursRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=UtilisateursRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\UtilisateursRepository")
  */
 class Utilisateurs implements UserInterface
 {
@@ -25,31 +26,43 @@ class Utilisateurs implements UserInterface
     /**
      * 
      * @ORM\Column(name="pseudo_utilisateurs", type="string", length=255)
+     * @Assert\Length(min=5, max=255, minMessage="Minimun 5 caractères pour votre identifiant", groups={"registration"})
      */
     private $username;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"json_user"})
+     * @Assert\Length(min=2, max=255, minMessage="Minimun 2 caractères pour votre nom", groups={"registration"})
      */
     private $nomUtilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"json_user"})
+     * @Assert\Length(min=2, max=255, minMessage="Minimun 2 caractères pour votre prénom", groups={"registration"})
      */
     private $prenomUtilisateurs;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"json_user"})
+     * 
+     * @Assert\Email()
      */
     private $emailUtilisateurs;
 
     /**
-     *  @ORM\Column(name="mdp_utilisateurs", type="string", length=255)
+     * @ORM\Column(name="mdp_utilisateurs", type="string", length=255)
+     * @Assert\Length(min=8, minMessage="Mot de passe d'au moins 8 caractères", groups={"registration"})
+     * @Assert\EqualTo(propertyPath="confirmPassword", message="Votre mot de passe doit être identique à la confirmation", groups={"registration"})
      */
     private $password;
+
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="Vous n'avez pas confirmer le même mot de passe", groups={"registration"}) 
+     */
+    private $confirmPassword;
 
     /**
      * @ORM\Column(type="string", length=10)
@@ -64,6 +77,8 @@ class Utilisateurs implements UserInterface
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"json_user"})
+     * 
+     * @Assert\Length(min=0, max=255, minMessage="Indiquer votre adresse", groups={"registration"})
      */
     private $adresse1Utilisateurs;
 
@@ -76,6 +91,8 @@ class Utilisateurs implements UserInterface
     /**
      * @ORM\Column(type="integer")
      * @Groups({"json_user"})
+     * 
+     * @Assert\Length(min=0, max=5, minMessage="Indiquer vun code postal valide et choisir la ville", maxMessage="Indiquer vun code postal valide et choisir la ville", groups={"registration"})
      */
     private $codePostalUtilisateurs;
 
@@ -95,13 +112,20 @@ class Utilisateurs implements UserInterface
     private $commandes;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ville::class)
+     * @ORM\ManyToOne(targetEntity=Ville::class, cascade={"all"})
      *  @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_ville", referencedColumnName="id_ville")
      * })
      * @Groups({"json_user"})
      */
     private $idVille;
+
+
+    //@Assert\Length(min=0, max=255, minMessage="Indiquer votre ville")
+    /**
+     * 
+     */
+    private $ville;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -183,6 +207,18 @@ class Utilisateurs implements UserInterface
     public function setPassWord(string $mdpUtilisateurs): self
     {
         $this->password = $mdpUtilisateurs;
+
+        return $this;
+    }
+
+    public function getConfirmPassword(): ?string
+    {
+        return $this->confirmPassword;
+    }
+
+    public function setConfirmPassWord(string $mdpUtilisateurs): self
+    {
+        $this->confirmPassword = $mdpUtilisateurs;
 
         return $this;
     }
@@ -353,6 +389,18 @@ class Utilisateurs implements UserInterface
     public function setIdVille(?Ville $idVille): self
     {
         $this->idVille = $idVille;
+
+        return $this;
+    }
+
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?string $ville): self
+    {
+        $this->ville = $ville;
 
         return $this;
     }

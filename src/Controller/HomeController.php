@@ -15,13 +15,15 @@ class HomeController extends AbstractController
     protected $data;
 
     /**
+     *  
      * @Route("/", name="home")
+     * @Route("/{connexion<[0-1]>}", name="home", defaults={"connexion"=0})
      */
 
-    //#[Route('/', name: 'home')]
-    public function index(SerializerInterface $serializer, RecettesRepository $repo, IngredientsRecettesRepository $repo2, ProduitsRepository $repo3): Response
-    {
 
+    public function index(int $connexion, SerializerInterface $serializer, RecettesRepository $repo, IngredientsRecettesRepository $repo2, ProduitsRepository $repo3): Response
+    {
+        $this->data['connexion'] = $connexion;
         $this->data['btnMenu'] = ['hover:text-noir text-cyanclair', 'text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair'];
         $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
 

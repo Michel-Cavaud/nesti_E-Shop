@@ -1,0 +1,42 @@
+<script>
+
+var codePostal = document.querySelector('.codePostal');
+var villes = document.querySelector('.villes');
+
+rechercheVille();
+
+codePostal.addEventListener('keyup',function (e) {
+    event.preventDefault();   
+     rechercheVille();
+});
+
+ async function rechercheVille(){
+    if(isNaN(codePostal.value)){
+        codePostal.value = codePostal.value.substring(0, codePostal.value.length - 1);
+    }else{
+        if (codePostal.value.length == 5) {
+
+            let response = await fetch('https://geo.api.gouv.fr/communes?codePostal=' + codePostal.value , {
+            method: 'get',
+            headers: {
+                'X-Requested-With': 'xmlhttprequest'
+                }
+            })
+            let responseData = await response.json();
+            for (var i=0; i<villes.length; i++) {
+                villes.remove(i);
+            }
+            if (response.ok === true){
+                responseData.forEach(element => {
+                    console.log(element);
+                    villes.options.add(new Option(element.nom, element.nom, true, true));
+                });
+            }
+        }else if(codePostal.value.length > 5){
+            codePostal.value = codePostal.value.substring(0, codePostal.value.length - 1);
+        }
+
+    }
+}
+
+</script>

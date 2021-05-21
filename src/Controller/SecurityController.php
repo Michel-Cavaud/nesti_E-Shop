@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Ville;
 use App\Entity\Commandes;
 use App\Entity\Utilisateurs;
 use App\Entity\LigneDeCommandes;
+use App\Form\CreerUtilisateurType;
+use App\Repository\VilleRepository;
 use App\Repository\ArticlesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\CommentairesRepository;
@@ -12,11 +15,60 @@ use App\Repository\UtilisateursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SecurityController extends AbstractController
 {
+    protected $data;
+
+    #[Route('/inscription', name: 'security_inscription')]
+    public function inscription(Request $request, EntityManagerInterface $em, VilleRepository $repo, UtilisateursRepository $repo2, UserPasswordEncoderInterface $encoder)
+    {
+
+        $this->data['btnMenu'] = ['text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair', 'text-noir hover:text-cyanclair'];
+        $this->data['LIEN_IMAGES_RECETTES'] = $_ENV['LIEN_IMAGES_RECETTES'];
+
+        $utilisateur = new Utilisateurs();
+
+        $form = $this->createForm(CreerUtilisateurType::class, $utilisateur);
+        $form->handleRequest($request);
+        $this->data['erreur'] = "";
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $ville = new Ville();
+
+            $listUtilisateur = $repo2->rechercheUser($utilisateur->getUsername(), $utilisateur->getEmailUtilisateurs());
+
+            if (!empty($listUtilisateur)) {
+                $this->data['erreur'] = "L'utilisateur existe déjà!";
+            } else {
+                $listVille = $repo->findOneBy(['nomVille' => $request->request->get('creer_utilisateur')['ville']]);
+                if (empty($listVille)) {
+                    $ville->setnomVille($request->request->get('creer_utilisateur')['ville']);
+                    $utilisateur->setIdVille($ville);
+                } else {
+                    $utilisateur->setIdVille($listVille);
+                }
+                $utilisateur->setdateCreationUtilisateurs(new \DateTime());
+                $hash = $encoder->encodePassword($utilisateur, $utilisateur->getPassword());
+                $utilisateur->setPassWord($hash);
+                $utilisateur->setetatUtilisateurs('a');
+
+                $em->persist($utilisateur);
+                $em->flush();
+
+                return $this->redirectToRoute('home', array(
+                    'connexion' => 1
+                ));
+            }
+        }
+
+        $this->data['form'] = $form->createView();
+        return $this->render('security/inscription.html.twig', $this->data);
+    }
+
     #[Route('/connexion', name: 'security_login')]
     public function login()
     {

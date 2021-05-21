@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+  
+     <div class="w-5/6 xl:w-2/3 mx-auto bg-white rounded shadow font-croissant text-cyanfonce mb-5">
+        <div class="py-4 px-8 text-black text-2xl border-b border-grey-lighter">Inscription pour créer un compte gratuit</div>
+        {{ form_start(form) }}
+         <div class="mt-2 text-rouge text-xl text-center font-croissant">{{erreur}}</div>
+        <div class="py-4 px-8">
+            <div class="flex mb-4">
+                <div class="w-1/3 mr-8">
+                   {{ form_row(form.civiliteUtilisateurs, {'attr': {'class': 'border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Mme / M.'}}) }}
+                </div>
+                <div class="w-1/3 mr-8">
+                    {{form_label(form.nomUtilisateurs)}}
+                    {{ form_widget(form.nomUtilisateurs, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Indiquez votre nom'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.nomUtilisateurs)}}</span>
+                </div>
+                <div class="w-1/3 mr-8">
+                    {{form_label(form.prenomUtilisateurs)}}
+                    {{ form_widget(form.prenomUtilisateurs, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Indiquez votre prénom'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.prenomUtilisateurs)}}</span>
+                </div>
+            </div>
+            <div class="flex mb-4">
+                <div class="w-1/2 mr-8 ">
+                    {{form_label(form.username)}}
+                    {{ form_widget(form.username, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Votre identifiant'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.username)}}</span>
+                </div>
+                <div class="w-1/2 mr-8">
+                    {{form_label(form.emailUtilisateurs)}}
+                    {{ form_widget(form.emailUtilisateurs, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Indiquez votre email'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.emailUtilisateurs)}}</span>
+                </div>
+            </div>
+            <div class="flex mb-4">
+                <div class="w-1/2 mr-8 ">
+                    {{form_label(form.password)}}
+                    {{ form_widget(form.password, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Votre mot de passe'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.password)}}</span>
+                </div>
+                <div class="w-1/2 mr-8 ">
+                     {{form_label(form.confirmPassword)}}
+                    {{ form_widget(form.confirmPassword, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Confirmer le mot de passe'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.confirmPassword)}}</span>
+                </div>
+            </div>
+            <div class="flex mb-4">
+                <div class="w-1/2 mr-8 ">
+                     {{form_label(form.adresse1Utilisateurs)}}
+                    {{ form_widget(form.adresse1Utilisateurs, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Votre adresse'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.adresse1Utilisateurs)}}</span>
+                </div>
+                <div class="w-1/2 mr-8 ">
+                    {{ form_row(form.adresse2Utilisateurs, {'attr': {'class': 'appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': "Complément d'adresse"}}) }}
+                </div>
+            </div>
+             <div class="flex mb-4">
+                <div class="w-1/2 mr-8 ">
+                    {{form_label(form.codePostalUtilisateurs)}}
+                    {{ form_widget(form.codePostalUtilisateurs, {'attr': {'class': 'codePostal appearance-none border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': 'Votre code postal'}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.codePostalUtilisateurs)}}</span>
+                </div>
+                
+                <div class="w-1/2 mr-8 ">
+                    {{form_label(form.ville)}}
+                    {{ form_widget(form.ville, {'attr': {'class': 'villes border rounded w-full py-2 px-3 text-grey-darker', 'placeholder': "Ville"}}) }}
+                    <span class="text-rouge text-xs">{{form_errors(form.ville)}}</span>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button type="reset" class="px-4 p-3 rounded-lg text-cyanfonce bg-blanc hover:text-noir hover:bg-cyanclair mr-4">Annuler</button>
+                <button type="submit" class=" px-4  p-3 rounded-lg text-cyanfonce bg-blanc hover:text-noir  hover:font-bold  hover:bg-cyanclair 
+                 hover:text-indigo-400 mr-8 ">Inscription</button>
+            
+            </div>
+           
+        </div>
+
+        
+        {{form_end(form)}}
+    </div>
+    
+
+{% endblock %}
+
+{% block javascripts %}
+     {{ parent() }}
+    {{ include('/js/inscription.js.twig') }}
+
+{% endblock %}

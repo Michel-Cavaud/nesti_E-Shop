@@ -124,9 +124,9 @@
     window.addEventListener('scroll', function() {
         //console.log(window.scrollY);
         if(window.scrollX > 600){
-              taille = 290;
+              taille = 70;
         }else{
-              taille = 130;
+              taille = 20;
         }
         if (window.scrollY >= taille) { 
               nav.classList.add('nav-sticky');       
@@ -360,5 +360,9 @@
     }); 
     function reload(){
       document.location.reload();
+    }
+
+    if({% if connexion is defined and connexion == 1%}true{%else%}false{%endif%}){
+      toggleModal();
     }
   </script>
